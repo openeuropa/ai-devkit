@@ -1,0 +1,7 @@
+# Shell commands the oe-guardrail hook blocks in this project: one PCRE per line,
+# delimiters included, matched against the whole command. Lines starting with #
+# are ignored, and an invalid pattern is skipped. Remove the "# " in front of an
+# example to enable it. This file is the project's; the devkit never overwrites it.
+#
+# /\bdrush\s+(?:sql-drop|sql:drop|site-install|si)\b/
+# /\bterraform\s+(?:apply|destroy)\b/
