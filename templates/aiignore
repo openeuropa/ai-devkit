@@ -1,0 +1,7 @@
+# Files the oe-guardrail hook never lets a shell command read: one glob per line,
+# matched against each argument and its file name. Lines starting with # are
+# ignored. Remove the "# " in front of an example to enable it. This file is the
+# project's; the devkit never overwrites it.
+#
+# *.sql.gz
+# config/sync/*.key
