@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "oe-guardrails",
+      "description": "Blocks pipe-to-shell, credential and .aiignore reads, network recon, non-allowlisted hosts and pushes to protected branches.",
+      "trigger": "PreToolUse",
+      "matcher": "shell",
+      "action": { "type": "command", "command": "vendor/bin/oe-guardrail" },
+      "timeout": 10,
+      "enabled": true
+    }
+  ]
+}

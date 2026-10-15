@@ -1,0 +1,10 @@
+{
+  "skill_file": "skills/oe-project-wiki/SKILL.md",
+  "assertions": [
+    {"id": "S01", "description": "Skill file exists", "check": "file_exists", "path": "skills/oe-project-wiki/SKILL.md"},
+    {"id": "S02", "description": "Frontmatter has name and description", "check": "agent_skill_frontmatter"},
+    {"id": "S03", "description": "Entry point stays lean", "check": "max_lines", "limit": 120},
+    {"id": "S04", "description": "Names the wiki index as the entry point", "check": "contains", "text": "docs/wiki/index.md"},
+    {"id": "S05", "description": "States the propose-never-write rule", "check": "contains", "text": "never write it unasked"}
+  ]
+}

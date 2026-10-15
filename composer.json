@@ -1,0 +1,52 @@
+{
+    "name": "openeuropa/ai-devkit",
+    "description": "OpenEuropa layer on drupal/ai_best_practices: OE skills, Kiro steering, a guardrail hook and a reviewer agent.",
+    "license": "EUPL-1.2",
+    "type": "composer-plugin",
+    "require": {
+        "composer-plugin-api": "^2.0",
+        "php": "^8.3",
+        "drupal/ai_best_practices": "1.0.x-dev#a33db4089f5af24aad03a0dfa49dd1dd5dcb42dd",
+        "symfony/filesystem": "^6.0 || ^7.0 || ^8.0",
+        "symfony/yaml": "^6.0 || ^7.0 || ^8.0"
+    },
+    "require-dev": {
+        "composer/composer": "^2.2",
+        "friendsofphp/php-cs-fixer": "^3.59",
+        "phpstan/phpstan": "^2",
+        "phpunit/phpunit": "^10.0",
+        "ronaldtebrake/agent-skills-validator": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenEuropa\\AiDevkit\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "OpenEuropa\\AiDevkit\\Tests\\": "tests/"
+        }
+    },
+    "bin": [
+        "bin/oe-guardrail"
+    ],
+    "scripts": {
+        "test": "phpunit",
+        "cs-check": "php-cs-fixer fix --dry-run --diff",
+        "cs-fix": "php-cs-fixer fix",
+        "evals": "python3 vendor/drupal/ai_best_practices/evals/run-evals.py --static --root .",
+        "phpstan": "phpstan analyse --no-progress"
+    },
+    "extra": {
+        "class": "OpenEuropa\\AiDevkit\\Composer\\Plugin"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "drupal/ai_best_practices": false,
+            "ronaldtebrake/agent-skills-validator": false
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php
+// PreToolUse hook for Kiro: exit 2 with a reason on stderr to block, 0 to allow.
+declare(strict_types=1);
+
+// Runs on every agent shell command: load only the one dependency-free class, not the project autoloader.
+require __DIR__.'/../src/Guardrail/Guardrail.php';
+
+$lines = static function (string $path): array {
+    if (!is_file($path)) {
+        return [];
+    }
+
+    return array_values(array_filter(array_map('trim', file($path) ?: []), fn (string $l) => '' !== $l && !str_starts_with($l, '#')));
+};
+
+// Projects may add their own deny patterns (one PCRE per line) and list files that must never be read.
+$extra = $lines(getcwd().'/.kiro/oe-guardrail-patterns.txt');
+$aiignore = $lines(getcwd().'/.aiignore');
+
+$reason = OpenEuropa\AiDevkit\Guardrail\Guardrail::decide((string) stream_get_contents(STDIN), $extra, $aiignore);
+if (null !== $reason) {
+    fwrite(STDERR, 'oe-guardrail: '.$reason.". Ask the user before retrying.\n");
+    exit(2);
+}
+exit(0);
