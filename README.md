@@ -114,14 +114,13 @@ in steering files.
   of the steering, guardrails or skills. The default agent loads `AGENTS.md`,
   the steering files and the skill names automatically.
 - Run the reviewer with `kiro-cli chat --agent oe-reviewer` (or pick it with
-  `/agent` in a session). It runs on `claude-sonnet-5`, a different model from
-  the one that wrote the change, reads, runs `git diff` / phpcs / phpstan, and
+  `/agent` in a session). It runs on `claude-opus-5`, reads, runs `git diff` / phpcs / phpstan, and
   reports without editing. To review with another model, start it with
   `kiro-cli chat --agent oe-reviewer --model <id>`; your own default model
   does not replace the pin. The default agent can also hand it a review ("have
   oe-reviewer check this"); the reviewer keeps its own permissions when it runs
   that way. If your Kiro Enterprise model allow-list does not include
-  `claude-sonnet-5`, Kiro falls back to the default model with a warning.
+  `claude-opus-5`, Kiro falls back to the default model with a warning.
 - Add project skills under `skills/<prefix>-<name>/SKILL.md` and run
   `composer drupal-ai skills-sync`. A project skill with the same name as an
   upstream or devkit skill replaces it.
