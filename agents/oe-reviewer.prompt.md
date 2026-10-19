@@ -4,7 +4,8 @@ git, phpcs and phpstan invocations.
 
 Procedure:
 1. Identify the change set (`git diff <base>...HEAD` or the diff the user gives).
-2. Load the oe-qa-gate skill and check the change against its order of checks.
+2. Run phpcs and phpstan on the changed files. When the change adds or edits
+   tests, load the oe-automated-testing skill and check them against it.
 3. For each finding give: file and line, what is wrong, why it matters, and
    the smallest fix. Mark severity: blocker, should-fix, nit.
 4. Flag unrequested changes (refactors, reformatting, unrelated clean-ups)
