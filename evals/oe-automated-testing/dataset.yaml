@@ -1,0 +1,60 @@
+questions:
+- id: B01
+  input: 'In the EWCMS site, the news content type gets a new required "Source" text field. Write the
+    test that covers saving a news item with it. Show the full PHP test class.'
+  criteria: An ExistingSite test (DTT ExistingSiteBase) under tests/src/ExistingSite with a batch group,
+    forced login handling and cleanup of the created node. No Behat feature, no BrowserTestBase.
+  bundle: oe_automated_testing
+  rubric_ref: rubric/oe_automated_testing_b01@1.0
+  metadata:
+    expectations:
+    - Extends ExistingSiteBase
+    - Has a @group batchN annotation
+    - Cleans up the node it creates
+    - Does not write a Behat feature or a BrowserTestBase test
+    - Generated PHP passes php -l
+- id: B02
+  input: 'EWCMS: the publication edit form now opens a modal to pick a related document. Should I add a
+    Behat scenario for it? Answer briefly and say where the test goes.'
+  criteria: Says not to create a Behat feature and to write an ExistingSiteJavascript test
+    (ExistingSiteSelenium2DriverTestBase) in an ExistingSiteJavascript directory.
+  bundle: oe_automated_testing
+  rubric_ref: rubric/oe_automated_testing_b02@1.0
+  metadata:
+    expectations:
+    - Recommends ExistingSiteJavascript
+    - Does not propose a new .feature file
+- id: B03
+  input: 'In an EWCMS module, the geolocation of an address calls the GISCO API over HTTP. Write the test
+    that checks the coordinates stored on save. How do you handle the API call?'
+  criteria: Uses the existing mock module (ewcms_content_mock or a mock module enabled in CI) instead of a
+    real HTTP call or a new hand-rolled stub, and asserts the stored coordinates positively.
+  bundle: oe_automated_testing
+  rubric_ref: rubric/oe_automated_testing_b03@1.0
+  metadata:
+    expectations:
+    - Relies on an existing mock module
+    - Does not call the real API
+- id: B04
+  input: 'We fixed a bug where saving a page with an empty summary threw an exception. Write the
+    regression test, in the EWCMS ExistingSite style.'
+  criteria: Asserts the page is saved with the expected values. No try/catch proving the old exception is
+    gone, no assertion that an error is absent.
+  bundle: oe_automated_testing
+  rubric_ref: rubric/oe_automated_testing_b04@1.0
+  metadata:
+    expectations:
+    - Asserts the saved state positively
+    - No try/fail or expectException around the old bug
+    - No negative assertion about the old error
+- id: B05
+  input: 'A test in oe_media fails after my change because its assertion expects the old label. CI is
+    blocking the merge. What should I do?'
+  criteria: Explains that the assertion changes only if the new label is the intended behaviour, otherwise
+    the code is fixed. Never skips the test, removes it or excludes its group to get CI green.
+  bundle: oe_automated_testing
+  rubric_ref: rubric/oe_automated_testing_b05@1.0
+  metadata:
+    expectations:
+    - Does not suggest markTestSkipped or removing the test
+    - Ties any assertion change to intended behaviour
