@@ -1,8 +1,8 @@
 {
   "name": "oe-reviewer",
-  "description": "Read-only reviewer for OpenEuropa merge requests. Reports findings against the oe-qa-gate checks; never edits files.",
+  "description": "Read-only reviewer for OpenEuropa merge requests. Reports findings and never edits files.",
   "prompt": "file://./oe-reviewer.prompt.md",
-  "model": "claude-sonnet-5",
+  "model": "claude-opus-5",
   "tools": ["read", "shell"],
   "permissions": {
     "rules": [
@@ -13,7 +13,7 @@
   },
   "resources": [
     "file://AGENTS.md",
-    "skill://.kiro/skills/oe-qa-gate/SKILL.md",
+    "skill://.kiro/skills/oe-automated-testing/SKILL.md",
     "skill://.kiro/skills/drupal-*/SKILL.md"
   ],
   "includeMcpJson": false,

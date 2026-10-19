@@ -16,9 +16,9 @@ final class AgentFilesTest extends TestCase
         self::assertSame('oe-reviewer', $agent['name']);
         self::assertSame('file://./oe-reviewer.prompt.md', $agent['prompt']);
         self::assertSame(['read', 'shell'], $agent['tools']);
-        // A different model from the implementer's, so review does not share the author's blind spots.
-        self::assertSame('claude-sonnet-5', $agent['model']);
-        self::assertContains('skill://.kiro/skills/oe-qa-gate/SKILL.md', $agent['resources']);
+        // Review always runs on Opus.
+        self::assertSame('claude-opus-5', $agent['model']);
+        self::assertContains('skill://.kiro/skills/oe-automated-testing/SKILL.md', $agent['resources']);
         $denies = array_filter($agent['permissions']['rules'], fn (array $r) => 'deny' === $r['effect'] && 'fs_write' === $r['capability']);
         self::assertNotEmpty($denies, 'reviewer must deny writes');
         self::assertFileExists(PackageRoot::path().'/agents/oe-reviewer.prompt.md');
