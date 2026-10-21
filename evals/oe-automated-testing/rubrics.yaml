@@ -1,0 +1,82 @@
+rubrics:
+- id: oe_automated_testing_b01
+  version: '1.0'
+  applicable_bundles:
+  - oe_automated_testing
+  checks:
+  - kind: must_contain_any
+    values:
+    - ExistingSiteBase
+  - kind: must_contain_any
+    values:
+    - '@group batch'
+  - kind: must_not_contain
+    values:
+    - extends BrowserTestBase
+    - 'Feature:'
+  - kind: php_lint
+  scoring:
+    combine: all_pass
+- id: oe_automated_testing_b02
+  version: '1.0'
+  applicable_bundles:
+  - oe_automated_testing
+  checks:
+  - kind: must_contain_any
+    values:
+    - ExistingSiteJavascript
+    - ExistingSiteSelenium2DriverTestBase
+  - kind: must_not_contain
+    case_sensitive: true
+    values:
+    - '```gherkin'
+    - "\nFeature: "
+  scoring:
+    combine: all_pass
+- id: oe_automated_testing_b03
+  version: '1.0'
+  applicable_bundles:
+  - oe_automated_testing
+  checks:
+  - kind: must_contain_any
+    values:
+    - ewcms_content_mock
+    - GiscoMiddleware
+  scoring:
+    combine: all_pass
+- id: oe_automated_testing_b04
+  version: '1.0'
+  applicable_bundles:
+  - oe_automated_testing
+  checks:
+  - kind: must_contain_any
+    values:
+    - assertEquals
+    - assertSame
+    - fieldValueEquals
+    - pageTextContains
+  - kind: must_not_contain
+    case_sensitive: true
+    values:
+    - $this->fail(
+    - ->expectException(
+    - ->pageTextNotContains(
+  scoring:
+    combine: all_pass
+- id: oe_automated_testing_b05
+  version: '1.0'
+  applicable_bundles:
+  - oe_automated_testing
+  checks:
+  - kind: must_contain_any
+    values:
+    - intended
+    - expected behaviour
+    - expected behavior
+    - fix the code
+  - kind: must_not_contain
+    case_sensitive: true
+    values:
+    - $this->markTestSkipped(
+  scoring:
+    combine: all_pass
