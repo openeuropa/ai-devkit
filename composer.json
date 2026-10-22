@@ -44,7 +44,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "drupal/ai_best_practices": false,
-            "ronaldtebrake/agent-skills-validator": false
+            "ronaldtebrake/agent-skills-validator": false,
+            "cweagans/composer-patches": true
         }
     },
     "minimum-stability": "stable",

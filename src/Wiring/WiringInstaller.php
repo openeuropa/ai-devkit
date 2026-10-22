@@ -36,6 +36,13 @@ final class WiringInstaller
         // Commented examples for the guardrail's project inputs; inert until a line is enabled.
         '.kiro/oe-guardrail-patterns.txt' => 'templates/oe-guardrail-patterns.txt',
         '.aiignore' => 'templates/aiignore',
+        // Project wiki skeleton: entry point plus one example of each page type. Lives at
+        // docs/wiki/ (project root, human-facing), not under .kiro/. See OEL-5055.
+        'docs/wiki/index.md' => 'templates/wiki/index.md',
+        'docs/wiki/adr/adr-0001-example.md' => 'templates/wiki/adr/adr-0001-example.md',
+        'docs/wiki/decisions/example-feature-decision.md' => 'templates/wiki/decisions/example-feature-decision.md',
+        'docs/wiki/conventions/example-convention.md' => 'templates/wiki/conventions/example-convention.md',
+        'docs/wiki/patterns/example-pattern.md' => 'templates/wiki/patterns/example-pattern.md',
     ];
 
     public function __construct(private readonly string $packageRoot)
