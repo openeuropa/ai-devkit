@@ -9,6 +9,14 @@ OpenEuropa projects keep durable knowledge in `docs/wiki/`: architecture,
 conventions, past investigations, pitfalls. It is the project's memory
 between agent sessions.
 
+The wiki has four page types under `docs/wiki/`, entered through `index.md`:
+`adr/` (numbered architectural decisions), `decisions/` (lighter feature
+decisions), `conventions/` (where things live, how they are named) and
+`patterns/` (reusable solutions). ADRs and feature decisions use the decision
+shape (Context / Decision / Consequences with a Status / Date / Origin
+header); conventions and patterns use the reference shape. The starter
+skeleton ships in `templates/wiki/`.
+
 ## Before starting work
 
 1. Read `docs/wiki/index.md` if it exists. If it does not, say so once and
@@ -32,6 +40,8 @@ At the end of the task, propose the addition; never write it unasked:
   same shape as the existing pages (title, one-paragraph purpose, a
   "researched against" line with date and versions, tables for id/label
   mappings, links to code paths), and the index line that points to it.
+  Put the ticket it came from on an `Origin:` line; it is provenance only,
+  so the page must still make sense without it.
 - With kenkeep: propose `/kk-add` with the fact in one or two sentences, or
   leave it for `/kk-curate` at session end.
 

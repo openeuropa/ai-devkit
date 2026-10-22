@@ -1,0 +1,70 @@
+rubrics:
+- id: oe_project_wiki_b01
+  version: '1.0'
+  applicable_bundles:
+  - oe_project_wiki
+  checks:
+  - kind: must_contain_any
+    values:
+    - docs/wiki/index.md
+    - index.md
+  - kind: must_contain_any
+    values:
+    - trust the code
+    - trust code
+    - code disagrees
+    - code as authoritative
+    - code is authoritative
+    - code wins
+    - drift
+  scoring:
+    combine: all_pass
+- id: oe_project_wiki_b02
+  version: '1.0'
+  applicable_bundles:
+  - oe_project_wiki
+  checks:
+  - kind: must_contain_any
+    values:
+    - propose
+    - proposal
+  - kind: must_not_contain
+    values:
+    - I have added
+    - I've added
+    - I added
+    - I created
+    - I've created
+    - I have written
+    - I wrote the page
+  - kind: must_contain_any
+    values:
+    - Origin
+  - kind: must_contain_any
+    values:
+    - index
+  scoring:
+    combine: all_pass
+- id: oe_project_wiki_b03
+  version: '1.0'
+  applicable_bundles:
+  - oe_project_wiki
+  checks:
+  - kind: must_contain_any
+    values:
+    - not durable
+    - transient
+    - would it save
+    - save the next person
+    - not lasting
+    - not worth
+    - does not belong
+    - belongs in the ticket
+    - keep it in the ticket
+    - ticket status
+  - kind: must_not_contain
+    values:
+    - add it to the wiki
+    - add them to the wiki
+  scoring:
+    combine: all_pass

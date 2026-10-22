@@ -5,6 +5,11 @@
     {"id": "S02", "description": "Frontmatter has name and description", "check": "agent_skill_frontmatter"},
     {"id": "S03", "description": "Entry point stays lean", "check": "max_lines", "limit": 120},
     {"id": "S04", "description": "Names the wiki index as the entry point", "check": "contains", "text": "docs/wiki/index.md"},
-    {"id": "S05", "description": "States the propose-never-write rule", "check": "contains", "text": "never write it unasked"}
+    {"id": "S05", "description": "States the propose-never-write rule", "check": "contains", "text": "never write it unasked"},
+    {"id": "S06", "description": "Names the ADR page type", "check": "contains", "text": "adr/"},
+    {"id": "S07", "description": "Names the conventions page type", "check": "contains", "text": "conventions/"},
+    {"id": "S08", "description": "Names the patterns page type", "check": "contains", "text": "patterns/"},
+    {"id": "S09", "description": "States the Origin provenance rule", "check": "contains", "text": "Origin:"},
+    {"id": "S10", "description": "Points at the starter skeleton", "check": "contains", "text": "templates/wiki/"}
   ]
 }
