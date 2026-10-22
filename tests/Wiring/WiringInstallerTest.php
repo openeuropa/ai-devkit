@@ -26,6 +26,11 @@ final class WiringInstallerTest extends TestCase
         '.kiro/steering/project-rtk.md',
         '.kiro/oe-guardrail-patterns.txt',
         '.aiignore',
+        'docs/wiki/index.md',
+        'docs/wiki/adr/adr-0001-example.md',
+        'docs/wiki/decisions/example-feature-decision.md',
+        'docs/wiki/conventions/example-convention.md',
+        'docs/wiki/patterns/example-pattern.md',
     ];
 
     public function testInstallsTheKiroFilesAndIsIdempotent(): void
@@ -100,6 +105,19 @@ final class WiringInstallerTest extends TestCase
         foreach (preg_grep('~^# /~', file($root.'/.kiro/oe-guardrail-patterns.txt', \FILE_IGNORE_NEW_LINES) ?: []) ?: [] as $example) {
             self::assertNotFalse(@preg_match(substr($example, 2), ''), "example pattern compiles: $example");
         }
+    }
+
+    public function testWikiSkeletonIsProjectOwnedAndCreatedOnlyOnce(): void
+    {
+        $root = $this->tempRoot();
+        $installer = new WiringInstaller(PackageRoot::path());
+        $installer->install($root);
+        // The index is the entry point the oe-project-wiki skill reads first.
+        self::assertFileExists($root.'/docs/wiki/index.md');
+        self::assertStringContainsString('adr/', (string) file_get_contents($root.'/docs/wiki/index.md'));
+        file_put_contents($root.'/docs/wiki/index.md', 'project wiki');
+        self::assertSame([], $installer->install($root), 'the wiki is the project\'s; a second run leaves it');
+        self::assertSame('project wiki', file_get_contents($root.'/docs/wiki/index.md'));
     }
 
     public function testSteeringBudget(): void
