@@ -1,0 +1,21 @@
+{
+  "name": "oe-reviewer",
+  "description": "Read-only reviewer for OpenEuropa merge requests. Reports findings against the oe-qa-gate checks; never edits files.",
+  "prompt": "file://./oe-reviewer.prompt.md",
+  "model": "claude-sonnet-5",
+  "tools": ["read", "shell"],
+  "permissions": {
+    "rules": [
+      { "capability": "fs_write", "match": ["**"], "effect": "deny" },
+      { "capability": "shell", "match": ["git diff *", "git log *", "git status*", "git show *", "vendor/bin/phpcs *", "vendor/bin/phpstan *", "rtk git diff *", "rtk git log *", "rtk vendor/bin/phpcs *", "rtk vendor/bin/phpstan *"], "effect": "allow" },
+      { "capability": "shell", "match": ["*"], "exclude": ["git diff *", "git log *", "git status*", "git show *", "vendor/bin/phpcs *", "vendor/bin/phpstan *", "rtk git diff *", "rtk git log *", "rtk vendor/bin/phpcs *", "rtk vendor/bin/phpstan *"], "effect": "deny" }
+    ]
+  },
+  "resources": [
+    "file://AGENTS.md",
+    "skill://.kiro/skills/oe-qa-gate/SKILL.md",
+    "skill://.kiro/skills/drupal-*/SKILL.md"
+  ],
+  "includeMcpJson": false,
+  "welcomeMessage": "oe-reviewer: tell me which branch or diff to review. I report; I do not edit."
+}

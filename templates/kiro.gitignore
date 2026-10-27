@@ -1,0 +1,4 @@
+# Kiro session and cache files; config, skills, steering, hooks and agents are committed.
+sessions/
+cache/
+*.log
