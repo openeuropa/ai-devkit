@@ -1,0 +1,17 @@
+{
+  "skill_file": "skills/oe-automated-testing/SKILL.md",
+  "assertions": [
+    {"id": "S01", "description": "Skill file exists", "check": "file_exists", "path": "skills/oe-automated-testing/SKILL.md"},
+    {"id": "S02", "description": "Frontmatter has name and description", "check": "agent_skill_frontmatter"},
+    {"id": "S03", "description": "Entry point stays lean", "check": "max_lines", "limit": 500},
+    {"id": "S04", "description": "Builds on the upstream testing skill", "check": "contains", "text": "Load `drupal-automated-testing` first"},
+    {"id": "S05", "description": "Forbids new Behat features", "check": "contains", "text": "Never create a new `.feature` file"},
+    {"id": "S06", "description": "Makes ExistingSite the site default", "check": "contains", "text": "the default test type is ExistingSite"},
+    {"id": "S07", "description": "States the no-negative-tests rule", "check": "contains", "text": "No negative tests"},
+    {"id": "S08", "description": "Sends external services to mock modules", "check": "contains", "text": "Tests never call a real external service"},
+    {"id": "S09", "description": "Pick-the-type section comes before the what-to-test rules", "check": "order", "first": "## Pick where the test goes", "second": "## What to test"},
+    {"id": "S10", "description": "ExistingSite reference exists", "check": "file_exists", "path": "skills/oe-automated-testing/references/existing-site.md"},
+    {"id": "S11", "description": "Components reference exists", "check": "file_exists", "path": "skills/oe-automated-testing/references/components.md"},
+    {"id": "S12", "description": "Mocking reference exists", "check": "file_exists", "path": "skills/oe-automated-testing/references/mocking.md"}
+  ]
+}
