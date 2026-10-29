@@ -27,7 +27,7 @@ This is the path CI runs on every pull request.
 
 ```bash
 python3 vendor/drupal/ai_best_practices/evals/run-evals.py \
-  --behavioral --skill oe-project-wiki --provider codex --root .
+  --behavioral --skill oe-project-wiki --provider kiro --root .
 ```
 
 Omitting `--root .` makes the runner look in the vendored package, which has
