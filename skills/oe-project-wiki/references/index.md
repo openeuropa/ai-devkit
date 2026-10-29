@@ -1,14 +1,14 @@
 # Project wiki
 
-<!-- This file is the project's: the devkit creates it once and never
-overwrites it.
+<!-- Reference skeleton for the oe-project-wiki skill. This is the shape a
+project's docs/wiki/index.md should take; the agent copies from here when a
+project asks for a wiki, it is never installed automatically.
 Entry point for the project's durable knowledge. Read this first, then open
 only the pages listed for the area you are about to touch. Keep this index in
 step with the pages under adr/, decisions/, conventions/ and patterns/. -->
 
 Durable knowledge for this project: decisions, conventions and patterns worth
-reading before the source code. Pages are grouped by area; each line says what
-you will find.
+reading before the source code. Each line says what you will find.
 
 ## Architectural decisions (adr/)
 

@@ -24,19 +24,15 @@ rubrics:
   applicable_bundles:
   - oe_project_wiki
   checks:
+  # The agent must emit the fixed verdict line, and it must say "proposed"
+  # (suggested, not written). Checking the token avoids scoring on free-text
+  # phrasing that a wrong answer can dodge or a right answer can trip.
   - kind: must_contain_any
     values:
-    - propose
-    - proposal
+    - 'Action: proposed'
   - kind: must_not_contain
     values:
-    - I have added
-    - I've added
-    - I added
-    - I created
-    - I've created
-    - I have written
-    - I wrote the page
+    - 'Action: wrote'
   - kind: must_contain_any
     values:
     - Origin
@@ -50,21 +46,14 @@ rubrics:
   applicable_bundles:
   - oe_project_wiki
   checks:
+  # Score on the fixed verdict token, not on free-text phrasing: a correct
+  # refusal must not fail for containing "...add it to the wiki", and a wrong
+  # answer must not pass for echoing "ticket status" from the prompt.
   - kind: must_contain_any
     values:
-    - not durable
-    - transient
-    - would it save
-    - save the next person
-    - not lasting
-    - not worth
-    - does not belong
-    - belongs in the ticket
-    - keep it in the ticket
-    - ticket status
+    - 'Verdict: not wiki'
   - kind: must_not_contain
     values:
-    - add it to the wiki
-    - add them to the wiki
+    - 'Verdict: wiki'
   scoring:
     combine: all_pass

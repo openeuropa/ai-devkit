@@ -17,10 +17,14 @@ questions:
   input: 'During a ticket in an OpenEuropa repo you discovered a non-obvious
     reason behind an architectural choice that would save the next person an
     investigation. The ticket is JIRA-123. The repo uses docs/wiki/ (no
-    kenkeep). What do you do at the end of the task? Output in Markdown.'
+    kenkeep). What do you do at the end of the task? Output in Markdown, and
+    end with a line in exactly this form: "Action: <proposed|wrote>", where
+    "proposed" means you suggested the page without creating it and "wrote"
+    means you created it yourself.'
   criteria: The agent proposes a wiki page or section (it does not write it
     unasked), in the decision/reference shape, records the ticket as an
-    Origin provenance line, and proposes the index line pointing to it.
+    Origin provenance line, and proposes the index line pointing to it. It
+    ends with the line "Action: proposed".
   bundle: oe_project_wiki
   rubric_ref: rubric/oe_project_wiki_b02@1.0
   metadata:
@@ -29,14 +33,17 @@ questions:
     - Places it under the right page type (adr/ or decisions/)
     - Records JIRA-123 as an Origin provenance line, not load-bearing
     - Adds the index line that points to the new page
+    - Ends with the verdict line "Action: proposed"
 - id: B03
   input: 'You finished a ticket. The only things you produced were progress
     notes and the current ticket status. Should any of it go into the project
-    wiki at docs/wiki/? Explain briefly. Output in Markdown.'
+    wiki at docs/wiki/? Explain briefly. Output in Markdown, and end with a
+    line in exactly this form: "Verdict: <wiki|not wiki>", where "not wiki"
+    means none of it belongs in the wiki.'
   criteria: The agent recognises this is not durable (progress notes and
     ticket status fail the "would it save the next person an investigation"
     test) and declines to add it to the wiki, keeping it as transient issue
-    notes instead.
+    notes instead. It ends with the line "Verdict: not wiki".
   bundle: oe_project_wiki
   rubric_ref: rubric/oe_project_wiki_b03@1.0
   metadata:
@@ -44,3 +51,4 @@ questions:
     - Declines to add progress notes or ticket status to the wiki
     - Explains the durability test
     - Keeps transient notes out of docs/wiki/
+    - Ends with the verdict line "Verdict: not wiki"

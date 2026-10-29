@@ -36,13 +36,10 @@ final class WiringInstaller
         // Commented examples for the guardrail's project inputs; inert until a line is enabled.
         '.kiro/oe-guardrail-patterns.txt' => 'templates/oe-guardrail-patterns.txt',
         '.aiignore' => 'templates/aiignore',
-        // Project wiki skeleton: entry point plus one example of each page type. Lives at
-        // docs/wiki/ (project root, human-facing), not under .kiro/. See OEL-5055.
-        'docs/wiki/index.md' => 'templates/wiki/index.md',
-        'docs/wiki/adr/adr-0001-example.md' => 'templates/wiki/adr/adr-0001-example.md',
-        'docs/wiki/decisions/example-feature-decision.md' => 'templates/wiki/decisions/example-feature-decision.md',
-        'docs/wiki/conventions/example-convention.md' => 'templates/wiki/conventions/example-convention.md',
-        'docs/wiki/patterns/example-pattern.md' => 'templates/wiki/patterns/example-pattern.md',
+        // The project wiki skeleton is NOT installed here: the devkit must not force wiki pages
+        // into every project, and a create-once copy would reappear whenever a project deleted an
+        // example page. The skeleton ships in the oe-project-wiki skill (references/) instead, and
+        // the agent copies it when a project asks for a wiki. See OEL-5055 / PR #4 review.
     ];
 
     /**
