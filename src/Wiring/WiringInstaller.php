@@ -36,10 +36,6 @@ final class WiringInstaller
         // Commented examples for the guardrail's project inputs; inert until a line is enabled.
         '.kiro/oe-guardrail-patterns.txt' => 'templates/oe-guardrail-patterns.txt',
         '.aiignore' => 'templates/aiignore',
-        // The project wiki skeleton is NOT installed here: the devkit must not force wiki pages
-        // into every project, and a create-once copy would reappear whenever a project deleted an
-        // example page. The skeleton ships in the oe-project-wiki skill (references/) instead, and
-        // the agent copies it when a project asks for a wiki. See OEL-5055 / PR #4 review.
     ];
 
     /**
