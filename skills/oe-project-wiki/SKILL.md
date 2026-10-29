@@ -20,6 +20,20 @@ the reference shape. The starter skeleton (an `index.md` plus one example per
 type) ships with this skill under `references/`; copy from there when a
 project needs a wiki.
 
+### ADR and decision status
+
+The `Status:` header on a decision-shape page takes one of:
+
+- `accepted` — the default; a merged decision in effect. A new page starts
+  here, because the merge is the acceptance (see adr-0003).
+- `superseded by adr-NNNN-<slug>` — replaced by a specific later ADR. The file
+  stays; the status points to its successor.
+- `deprecated` — no longer applies, with no replacement (nothing superseded
+  it; the thing it decided about went away).
+
+There is no `proposed` state: a decision under review is tracked by its open
+merge request, not by a header value that would go stale once merged.
+
 ## Before starting work
 
 1. Read `docs/wiki/index.md` if it exists. If it does not, say so once and

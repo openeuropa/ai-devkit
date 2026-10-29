@@ -12,3 +12,5 @@ grouped by area; each line names the page, its type, and what you will find.
 - project-wiki/adr-0002-wiki-structure-and-maintenance.md - (adr) page taxonomy
   (grouped by area, type in the header), the layered maintenance rule (reviewer
   is the gate), and issue-tracker linkage.
+- project-wiki/adr-0003-adr-status-vocabulary.md - (adr) the allowed `Status:`
+  values (accepted, superseded by, deprecated) and why there is no `proposed`.

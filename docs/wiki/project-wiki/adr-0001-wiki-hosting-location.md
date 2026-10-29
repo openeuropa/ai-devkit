@@ -1,6 +1,6 @@
 # Wiki hosting location
 
-- Status: proposed
+- Status: accepted
 - Date: 2026-10-21
 - Type: adr
 - Origin: OEL-5055
