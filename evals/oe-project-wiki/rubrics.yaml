@@ -17,6 +17,15 @@ rubrics:
     - code is authoritative
     - code wins
     - drift
+  # Progressive disclosure: the answer must scope to a single area, not read
+  # the whole wiki. Score on the fixed "Scope: <area> pages only" line and
+  # reject the whole-wiki escape hatch, so an answer that opens everything fails.
+  - kind: must_contain_any
+    values:
+    - pages only
+  - kind: must_not_contain
+    values:
+    - 'Scope: whole wiki'
   scoring:
     combine: all_pass
 - id: oe_project_wiki_b02
