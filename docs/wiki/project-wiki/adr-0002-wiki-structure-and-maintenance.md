@@ -71,8 +71,8 @@ is trivially gamed, and trains contributors to bypass it.
 - **Jira/PR -> wiki (in):** the PR that makes an architectural change also
   updates `docs/wiki/`. Traceability flows issue -> PR -> wiki and lives in
   git.
-- **Promotion rule:** `local_docs/issues/<ID>/` notes are transient; only the
-  durable conclusion is promoted into `docs/wiki/`, carrying the issue key as
+- **Promotion rule:** an issue's working notes are transient; only the durable
+  conclusion is promoted into `docs/wiki/`, carrying the issue key as
   provenance. A finding is promoted when it would save the next person an
   investigation.
 
