@@ -2,6 +2,7 @@
 
 - Status: proposed
 - Date: 2026-10-21
+- Type: adr
 - Origin: OEL-5055
 
 ## Context
@@ -14,23 +15,35 @@ structure, the maintenance rule, and the issue-tracker linkage policy.
 
 ### Canonical structure
 
+Pages are grouped by **area** (a module, subsystem or feature), not by type.
+Each page names its type in a `Type:` header.
+
 ```
 docs/wiki/
   index.md            entry point; lists every page by area
-  adr/                numbered architectural decision records
-  decisions/          lighter feature / scoped decisions
-  conventions/        directory and code conventions (reference)
-  patterns/           the pattern catalogue (reference)
+  <area>/             one folder per module / subsystem / feature
+    adr-NNNN-<slug>.md   Type: adr        numbered architectural decision
+    <slug>.md            Type: decision   lighter scoped decision
+    <slug>.md            Type: convention directory / code convention (reference)
+    <slug>.md            Type: pattern    a pattern in the catalogue (reference)
+    <slug>.md            Type: pitfall    a trap to avoid (reference)
 ```
 
-Two page shapes: **decision** (Context / Decision / Consequences with a
-Status / Date / Origin header; optional "Options considered" section) and
-**reference** (title, one-paragraph purpose, "researched against" line with
-date and versions, tables, code-path links, optional Origin).
+Five page types, declared in each page's `Type:` header, in two shapes:
+**decision** (`adr`, `decision`) and **reference** (`convention`, `pattern`,
+`pitfall`). The decision shape is Context / Decision / Consequences with a
+Status / Date / Type / Origin header (optional "Options considered"); the
+reference shape is title, one-paragraph purpose, a "researched against" line
+with date and versions, tables, code-path links, optional Origin, plus the
+`Type:` header.
 
-ADRs are numbered `adr-NNNN-<slug>.md`, never reused; a reversed decision
-flips to "superseded by" and links to the replacement. Feature decisions are
-named by slug, not numbered.
+Grouping by area (not by type) matches how the agent searches: it opens the
+pages for the area it is about to touch. The type lives in the page header so a
+single area folder can hold every kind of page about that area.
+
+ADRs are numbered `adr-NNNN-<slug>.md`, never reused across the wiki; a
+reversed decision flips to "superseded by" and links to the replacement.
+Decisions, conventions, patterns and pitfalls are named by slug, not numbered.
 
 `docs/wiki/index.md` is the single entry point: read it first, then only the
 pages it lists for the area being touched (progressive disclosure).

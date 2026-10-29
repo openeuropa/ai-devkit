@@ -6,10 +6,12 @@
     {"id": "S03", "description": "Entry point stays lean", "check": "max_lines", "limit": 120},
     {"id": "S04", "description": "Names the wiki index as the entry point", "check": "contains", "text": "docs/wiki/index.md"},
     {"id": "S05", "description": "States the propose-never-write rule", "check": "contains", "text": "never write it unasked"},
-    {"id": "S06", "description": "Names the ADR page type", "check": "contains", "text": "adr/"},
-    {"id": "S07", "description": "Names the conventions page type", "check": "contains", "text": "conventions/"},
-    {"id": "S08", "description": "Names the patterns page type", "check": "contains", "text": "patterns/"},
+    {"id": "S06", "description": "Names the adr page type", "check": "contains", "text": "`adr`"},
+    {"id": "S07", "description": "Names the convention page type", "check": "contains", "text": "`convention`"},
+    {"id": "S08", "description": "Names the pattern page type", "check": "contains", "text": "`pattern`"},
     {"id": "S09", "description": "States the Origin provenance rule", "check": "contains", "text": "Origin:"},
-    {"id": "S10", "description": "Points at the starter skeleton", "check": "contains", "text": "references/"}
+    {"id": "S10", "description": "Points at the starter skeleton", "check": "contains", "text": "references/"},
+    {"id": "S11", "description": "Groups pages by area", "check": "contains", "text": "by **area**"},
+    {"id": "S12", "description": "Names the pitfall page type", "check": "contains", "text": "`pitfall`"}
   ]
 }

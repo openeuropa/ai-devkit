@@ -2,11 +2,12 @@
 
 - Status: proposed
 - Date: YYYY-MM-DD
+- Type: decision
 - Origin: <ISSUE-KEY>
 
-<!-- Example feature decision: a scoped decision too small for an ADR. Named by
-slug, not numbered. Same decision shape as an ADR, usually shorter. Delete this
-example once a real one exists. -->
+<!-- Example feature decision (decision shape): a scoped decision too small for
+an ADR. Named by slug, not numbered. Same shape as an ADR, usually shorter.
+Delete this example once a real one exists. -->
 
 ## Context
 
