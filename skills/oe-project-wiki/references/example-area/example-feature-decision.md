@@ -1,6 +1,6 @@
 # Example feature decision
 
-- Status: proposed
+- Status: accepted
 - Date: YYYY-MM-DD
 - Type: decision
 - Origin: <ISSUE-KEY>
