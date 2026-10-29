@@ -1,5 +1,7 @@
 # Example pattern
 
+- Type: pattern
+
 One-paragraph purpose: the reusable solution this page describes and when to
 reach for it.
 

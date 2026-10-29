@@ -15,11 +15,11 @@ python3 vendor/drupal/ai_best_practices/evals/run-evals.py \
   --static --skill oe-project-wiki --root .
 ```
 
-Ten checks (S01-S10): the skill file exists, its frontmatter follows the
+Twelve checks (S01-S12): the skill file exists, its frontmatter follows the
 Agent Skills spec, the entry stays under 120 lines, and it names the wiki
-index, the four page types (`adr/`, `decisions/`, `conventions/`,
-`patterns/`), the `Origin:` provenance rule, the `references/` skeleton,
-and the "never write it unasked" rule.
+index, the five page types (`adr`, `decision`, `convention`, `pattern`,
+`pitfall`), the by-area grouping, the `Origin:` provenance rule, the
+`references/` skeleton, and the "never write it unasked" rule.
 
 This is the path CI runs on every pull request.
 

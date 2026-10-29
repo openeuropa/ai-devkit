@@ -30,7 +30,7 @@ questions:
   metadata:
     expectations:
     - Proposes the page rather than writing it unasked
-    - Places it under the right page type (adr/ or decisions/)
+    - Places it in the right area folder with a `Type:` header (adr or decision)
     - Records JIRA-123 as an Origin provenance line, not load-bearing
     - Adds the index line that points to the new page
     - Ends with the verdict line "Action: proposed"

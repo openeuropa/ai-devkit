@@ -9,14 +9,16 @@ OpenEuropa projects keep durable knowledge in `docs/wiki/`: architecture,
 conventions, past investigations, pitfalls. It is the project's memory
 between agent sessions.
 
-The wiki has four page types under `docs/wiki/`, entered through `index.md`:
-`adr/` (numbered architectural decisions), `decisions/` (lighter feature
-decisions), `conventions/` (where things live, how they are named) and
-`patterns/` (reusable solutions). ADRs and feature decisions use the decision
-shape (Context / Decision / Consequences with a Status / Date / Origin
-header); conventions and patterns use the reference shape. The starter
-skeleton (an `index.md` plus one example of each page type) ships with this
-skill under `references/`; copy from there when a project needs a wiki.
+The wiki groups pages by **area** (a module, subsystem or feature) under
+`docs/wiki/`, entered through `index.md`. Each page names its **type** in a
+`Type:` header: `adr` (numbered architectural decision), `decision` (lighter
+scoped decision), `convention` (where things live, how they are named),
+`pattern` (reusable solution) or `pitfall` (a trap to avoid). ADRs and
+decisions use the decision shape (Context / Decision / Consequences with a
+Status / Date / Type / Origin header); conventions, patterns and pitfalls use
+the reference shape. The starter skeleton (an `index.md` plus one example per
+type) ships with this skill under `references/`; copy from there when a
+project needs a wiki.
 
 ## Before starting work
 
@@ -37,11 +39,12 @@ ticket status, anything the code states plainly.
 
 At the end of the task, propose the addition; never write it unasked:
 
-- Without kenkeep: propose a page or a section for `docs/wiki/`, in the
-  same shape as the existing pages (title, one-paragraph purpose, a
-  "researched against" line with date and versions, tables for id/label
-  mappings, links to code paths), and the index line that points to it.
-  Put the ticket it came from on an `Origin:` line; it is provenance only,
+- Without kenkeep: propose a page or a section for `docs/wiki/`, under the
+  area folder it belongs to (module, subsystem or feature) and with a `Type:`
+  header, in the same shape as the existing pages (title, one-paragraph
+  purpose, a "researched against" line with date and versions, tables for
+  id/label mappings, links to code paths), plus the index line that points to
+  it. Put the ticket it came from on an `Origin:` line; it is provenance only,
   so the page must still make sense without it.
 - With kenkeep: propose `/kk-add` with the fact in one or two sentences, or
   leave it for `/kk-curate` at session end.

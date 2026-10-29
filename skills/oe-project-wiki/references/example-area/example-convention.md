@@ -1,5 +1,7 @@
 # Example convention
 
+- Type: convention
+
 One-paragraph purpose: what this page tells you and when to read it. For a
 convention, this is usually "where X lives" or "how X is named".
 
