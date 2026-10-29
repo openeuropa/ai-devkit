@@ -2,10 +2,14 @@ questions:
 - id: B01
   input: 'You are starting a ticket in an OpenEuropa repository that has a
     docs/wiki/index.md file. Describe, step by step, what you do before you
-    begin reading or changing source code. Output in Markdown.'
+    begin reading or changing source code. Output in Markdown, and end with a
+    line in exactly this form: "Scope: <area> pages only", naming the single
+    area you would open pages for. Only use "Scope: whole wiki" if you would
+    genuinely read every page.'
   criteria: The agent reads docs/wiki/index.md first, then opens only the
     pages the index lists for the area it is about to touch, rather than
-    reading the whole wiki or going straight to source.
+    reading the whole wiki or going straight to source. It ends with a scope
+    line naming a single area (pages only), not the whole wiki.
   bundle: oe_project_wiki
   rubric_ref: rubric/oe_project_wiki_b01@1.0
   metadata:
@@ -13,6 +17,7 @@ questions:
     - Reads docs/wiki/index.md before source code
     - Opens only the pages relevant to the area being touched
     - Treats pages as facts but trusts code when they disagree
+    - Ends with a scope line naming a single area (pages only), not the whole wiki
 - id: B02
   input: 'During a ticket in an OpenEuropa repo you discovered a non-obvious
     reason behind an architectural choice that would save the next person an
@@ -24,7 +29,7 @@ questions:
   criteria: The agent proposes a wiki page or section (it does not write it
     unasked), in the decision/reference shape, records the ticket as an
     Origin provenance line, and proposes the index line pointing to it. It
-    ends with the line "Action: proposed".
+    ends with an action line stating the page was proposed, not written.
   bundle: oe_project_wiki
   rubric_ref: rubric/oe_project_wiki_b02@1.0
   metadata:
@@ -33,7 +38,7 @@ questions:
     - Places it in the right area folder with a `Type:` header (adr or decision)
     - Records JIRA-123 as an Origin provenance line, not load-bearing
     - Adds the index line that points to the new page
-    - Ends with the verdict line "Action: proposed"
+    - Ends with an action line stating the page was proposed, not written
 - id: B03
   input: 'You finished a ticket. The only things you produced were progress
     notes and the current ticket status. Should any of it go into the project
@@ -43,7 +48,8 @@ questions:
   criteria: The agent recognises this is not durable (progress notes and
     ticket status fail the "would it save the next person an investigation"
     test) and declines to add it to the wiki, keeping it as transient issue
-    notes instead. It ends with the line "Verdict: not wiki".
+    notes instead. It ends with a verdict line stating the content is not wiki
+    material.
   bundle: oe_project_wiki
   rubric_ref: rubric/oe_project_wiki_b03@1.0
   metadata:
@@ -51,4 +57,4 @@ questions:
     - Declines to add progress notes or ticket status to the wiki
     - Explains the durability test
     - Keeps transient notes out of docs/wiki/
-    - Ends with the verdict line "Verdict: not wiki"
+    - Ends with a verdict line stating the content is not wiki material
