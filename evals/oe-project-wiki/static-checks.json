@@ -10,6 +10,6 @@
     {"id": "S07", "description": "Names the conventions page type", "check": "contains", "text": "conventions/"},
     {"id": "S08", "description": "Names the patterns page type", "check": "contains", "text": "patterns/"},
     {"id": "S09", "description": "States the Origin provenance rule", "check": "contains", "text": "Origin:"},
-    {"id": "S10", "description": "Points at the starter skeleton", "check": "contains", "text": "templates/wiki/"}
+    {"id": "S10", "description": "Points at the starter skeleton", "check": "contains", "text": "references/"}
   ]
 }

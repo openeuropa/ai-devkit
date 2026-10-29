@@ -15,7 +15,8 @@ decisions), `conventions/` (where things live, how they are named) and
 `patterns/` (reusable solutions). ADRs and feature decisions use the decision
 shape (Context / Decision / Consequences with a Status / Date / Origin
 header); conventions and patterns use the reference shape. The starter
-skeleton ships in `templates/wiki/`.
+skeleton (an `index.md` plus one example of each page type) ships with this
+skill under `references/`; copy from there when a project needs a wiki.
 
 ## Before starting work
 
