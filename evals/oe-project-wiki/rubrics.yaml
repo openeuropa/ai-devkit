@@ -1,0 +1,78 @@
+rubrics:
+- id: oe_project_wiki_b01
+  version: '1.0'
+  applicable_bundles:
+  - oe_project_wiki
+  checks:
+  - kind: must_contain_any
+    values:
+    - docs/wiki/index.md
+    - index.md
+  - kind: must_contain_any
+    values:
+    - trust the code
+    - trust code
+    - code disagrees
+    - code as authoritative
+    - code is authoritative
+    - code wins
+    - drift
+  # Progressive disclosure: the answer must scope to a single area, not read
+  # the whole wiki. Require both the fixed "Scope:" line prefix and its
+  # " pages only" tail so stray prose can't satisfy the check on its own, and
+  # reject the whole-wiki escape hatch, so an answer that opens everything fails.
+  - kind: must_contain_any
+    values:
+    - 'Scope:'
+  - kind: must_contain_any
+    values:
+    - ' pages only'
+  - kind: must_not_contain
+    values:
+    - 'Scope: whole wiki'
+  scoring:
+    combine: all_pass
+- id: oe_project_wiki_b02
+  version: '1.0'
+  applicable_bundles:
+  - oe_project_wiki
+  checks:
+  # The agent must emit the fixed verdict line, and it must say "proposed"
+  # (suggested, not written). Checking the token avoids scoring on free-text
+  # phrasing that a wrong answer can dodge or a right answer can trip.
+  - kind: must_contain_any
+    values:
+    - 'Action: proposed'
+  - kind: must_not_contain
+    values:
+    - 'Action: wrote'
+  # The proposed page is decision-shape, so its Status: header must use the
+  # adr-0003 vocabulary (accepted/superseded/deprecated). "proposed" was
+  # dropped as a status value, so a sample header using it is wrong.
+  - kind: must_not_contain
+    values:
+    - 'Status: proposed'
+  - kind: must_contain_any
+    values:
+    - Origin
+  - kind: must_contain_any
+    values:
+    - index
+  scoring:
+    combine: all_pass
+- id: oe_project_wiki_b03
+  version: '1.0'
+  applicable_bundles:
+  - oe_project_wiki
+  checks:
+  # Score on the fixed verdict token, not on free-text phrasing: a correct
+  # refusal must not fail for containing "...add it to the wiki", and a wrong
+  # answer must not pass for echoing "ticket status" from the prompt.
+  - kind: must_contain_any
+    values:
+    - 'Verdict: not wiki'
+  - kind: must_not_contain
+    values:
+    - 'Verdict: wiki'
+  scoring:
+    combine: all_pass
