@@ -46,6 +46,12 @@ rubrics:
   - kind: must_not_contain
     values:
     - 'Action: wrote'
+  # The proposed page is decision-shape, so its Status: header must use the
+  # adr-0003 vocabulary (accepted/superseded/deprecated). "proposed" was
+  # dropped as a status value, so a sample header using it is wrong.
+  - kind: must_not_contain
+    values:
+    - 'Status: proposed'
   - kind: must_contain_any
     values:
     - Origin
