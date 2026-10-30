@@ -98,17 +98,16 @@ in steering files.
 
 ## Using it
 
-- Use Kiro's v3 engine. Until Kiro CLI 3.0, planned for the end of October
-  2026, Kiro CLI starts its older v2 engine by default, and that engine skips
-  the devkit's reviewer agent and its guardrail hook without a message. Make v3
-  your default once, on your machine:
+- Use Kiro's v3 engine. From Kiro CLI 3.0 it is the default, so a current CLI
+  runs the devkit's reviewer agent and guardrail hook out of the box; no setup
+  is needed. On an older 2.x CLI the v2 engine runs by default and skips both
+  without a message, so either upgrade to 3.0 or select v3 yourself:
 
   ```bash
   kiro-cli settings chat.agentEngine v3
   ```
 
-  Or pass `--v3` each time, as in `kiro-cli chat --v3`. From CLI 3.0, v3 is
-  the default and this step is no longer needed.
+  Or pass `--v3` each time, as in `kiro-cli chat --v3`.
 - Start Kiro in the project root: `kiro-cli chat`. Kiro reads `.kiro/` only
   from the folder it starts in, so a session started in a subfolder gets none
   of the steering, guardrails or skills. The default agent loads `AGENTS.md`,
