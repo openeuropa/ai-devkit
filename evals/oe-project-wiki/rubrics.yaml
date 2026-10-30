@@ -18,11 +18,15 @@ rubrics:
     - code wins
     - drift
   # Progressive disclosure: the answer must scope to a single area, not read
-  # the whole wiki. Score on the fixed "Scope: <area> pages only" line and
+  # the whole wiki. Require both the fixed "Scope:" line prefix and its
+  # " pages only" tail so stray prose can't satisfy the check on its own, and
   # reject the whole-wiki escape hatch, so an answer that opens everything fails.
   - kind: must_contain_any
     values:
-    - pages only
+    - 'Scope:'
+  - kind: must_contain_any
+    values:
+    - ' pages only'
   - kind: must_not_contain
     values:
     - 'Scope: whole wiki'
