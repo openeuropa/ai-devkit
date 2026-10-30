@@ -36,6 +36,21 @@ final class AgentFilesTest extends TestCase
         }
     }
 
+    /** The guardrail hook must use the v3 schema: a versioned file with a hooks array whose entries run a command action. */
+    public function testGuardrailHookUsesV3Schema(): void
+    {
+        $file = json_decode((string) file_get_contents(PackageRoot::path().'/hooks/oe-guardrails.json'), true, 512, JSON_THROW_ON_ERROR);
+        self::assertSame('v1', $file['version'] ?? null, 'hook file must declare the v3 schema version');
+        self::assertIsArray($file['hooks'] ?? null, 'v3 hooks live under a hooks array');
+        self::assertNotEmpty($file['hooks']);
+        $hookFields = ['name', 'description', 'trigger', 'matcher', 'action', 'timeout', 'enabled', 'confirm'];
+        foreach ($file['hooks'] as $hook) {
+            self::assertSame([], array_values(array_diff(array_keys($hook), $hookFields)), 'hook uses only v3 fields');
+            self::assertSame('command', $hook['action']['type'] ?? null, 'v3 hook action must be a command');
+            self::assertArrayHasKey('command', $hook['action']);
+        }
+    }
+
     /** Kiro CLI v3 removed toolsSettings, allowedTools and denyByDefault; the v2 engine is not supported. */
     public function testReviewerUsesOnlyV3AgentFields(): void
     {
