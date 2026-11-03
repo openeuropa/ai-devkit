@@ -38,7 +38,7 @@ echo '{"hook_event_name":"PreToolUse","tool_name":"execute_bash","tool_input":{"
 echo "--- a second install changes nothing"
 echo "/vendor/" > .gitignore
 git add -A && git commit -qm snapshot
-composer install --no-interaction >/dev/null 2>&1
+composer install --no-interaction
 if [ -n "$(git status --porcelain)" ]; then git status --porcelain; echo "second install was not idempotent"; exit 1; fi
 
 echo "smoke-install passed"
