@@ -104,6 +104,63 @@ final class GuardrailTest extends TestCase
         self::assertNotNull(Guardrail::decide(self::payload('tac SECRETS/A.TXT'), [], ['secrets/*.txt']));
     }
 
+    /**
+     * @dataProvider blockedReads
+     */
+    public function testBlocksReadingSecretFilesWithKiroTools(string $payload): void
+    {
+        self::assertNotNull(Guardrail::decide($payload), $payload);
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function blockedReads(): iterable
+    {
+        yield 'read_file .env' => [self::readPayload('read_file', '/project/.env')];
+        yield 'read_file settings.php' => [self::readPayload('read_file', '/project/web/sites/default/settings.php')];
+        yield 'read_file settings.local.php' => [self::readPayload('read_file', '/project/web/sites/default/settings.local.php')];
+        yield 'read_file runner.yml' => [self::readPayload('read_file', '/project/runner.yml')];
+        yield 'read_file sql dump' => [self::readPayload('read_file', '/project/dbs/dump.sql')];
+        yield 'read_file env local' => [self::readPayload('read_file', '/project/.env.local')];
+        yield 'list_directory dbs' => [self::readPayload('list_directory', '/project/dbs/dump.sql')];
+    }
+
+    /**
+     * @dataProvider allowedReads
+     */
+    public function testAllowsReadingNonSecretFilesWithKiroTools(string $payload): void
+    {
+        self::assertNull(Guardrail::decide($payload), $payload);
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function allowedReads(): iterable
+    {
+        yield 'env dist is fine' => [self::readPayload('read_file', '/project/.env.dist')];
+        yield 'env example is fine' => [self::readPayload('read_file', '/project/.env.example')];
+        yield 'runner dist is fine' => [self::readPayload('read_file', '/project/runner.yml.dist')];
+        yield 'default settings is fine' => [self::readPayload('read_file', '/project/web/sites/default/default.settings.php')];
+        yield 'ordinary source file' => [self::readPayload('read_file', '/project/src/Guardrail/Guardrail.php')];
+        yield 'list an ordinary directory' => [self::readPayload('list_directory', '/project/src')];
+        yield 'missing path is a no-op' => [(string) json_encode(['hook_event_name' => 'PreToolUse', 'cwd' => '/project', 'tool_name' => 'read_file', 'tool_input' => []])];
+    }
+
+    public function testAiignoreGlobsBlockKiroReadsRelativeToCwd(): void
+    {
+        // The path is absolute; the .aiignore glob is project-relative, so it is matched against the cwd-relative path.
+        self::assertNotNull(Guardrail::decide(self::readPayload('read_file', '/project/secrets/a.txt'), [], ['secrets/*.txt']));
+        self::assertNull(Guardrail::decide(self::readPayload('read_file', '/project/secrets/a.txt'), [], ['other/*.txt']));
+        self::assertNotNull(Guardrail::decide(self::readPayload('read_file', '/project/config/private.key'), [], ['*.key']));
+    }
+
+    private static function readPayload(string $tool, string $path): string
+    {
+        return (string) json_encode(['hook_event_name' => 'PreToolUse', 'cwd' => '/project', 'tool_name' => $tool, 'tool_input' => ['path' => $path]]);
+    }
+
     private static function payload(string $command): string
     {
         return (string) json_encode(['hook_event_name' => 'PreToolUse', 'cwd' => '/project', 'tool_name' => 'execute_bash', 'tool_input' => ['command' => $command]]);

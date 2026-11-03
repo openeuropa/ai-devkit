@@ -5,22 +5,33 @@ declare(strict_types=1);
 namespace OpenEuropa\AiDevkit\Guardrail;
 
 /**
- * Decision logic for the PreToolUse hook: block a shell command, or let it through.
+ * Decision logic for the PreToolUse hook: block a shell command or a file read, or let it through.
  *
- * Rules are evaluated per command segment (split on `;`, `&&`, `||` and `|`) so that a protected branch
+ * Shell rules are evaluated per command segment (split on `;`, `&&`, `||` and `|`) so that a protected branch
  * name or a file pattern in one segment does not taint another; the pipe-to-shell rule sees the whole line.
- * This is a tripwire for an agent's ordinary commands, not a sandbox: a path assembled at run time gets past
- * it, and the DevOps image's egress firewall, not this class, is what stops traffic to other hosts.
+ * File-read tools (Kiro's own `read_file`, `list_directory`) carry one path, matched against the same
+ * secret-file list and `.aiignore` globs the shell rules use. This is a tripwire for an agent's ordinary
+ * actions, not a sandbox: a path assembled at run time gets past it, a hook sees a search tool's arguments
+ * but not its results, and the DevOps image's egress firewall, not this class, is what stops traffic to
+ * other hosts.
  */
 final class Guardrail
 {
     /** Tool IDs Kiro sends in the hook payload for the shell tool. */
     public const SHELL_TOOLS = ['execute_bash'];
 
+    /** Tool IDs for Kiro's own file-read tools; each carries the path it opens in `tool_input.path`. */
+    public const READ_TOOLS = ['read_file', 'list_directory'];
+
     /** Hosts curl and wget may contact; matches the egress allowlist of the DevOps image. */
     private const ALLOWED_HOSTS = [
-        'packagist.org', 'repo.packagist.org', 'registry.npmjs.org', 'github.com', 'api.github.com',
-        'git.drupalcode.org', 'drupal.org', 'www.drupal.org',
+        'packagist.org',
+        'repo.packagist.org',
+        'registry.npmjs.org',
+        'github.com', 'api.github.com',
+        'git.drupalcode.org',
+        'drupal.org',
+        'www.drupal.org',
     ];
 
     /**
@@ -48,7 +59,14 @@ final class Guardrail
     public static function decide(string $stdin, array $extraDenyPatterns = [], array $aiignoreGlobs = []): ?string
     {
         $data = json_decode($stdin, true);
-        if (!\is_array($data) || !\in_array($data['tool_name'] ?? null, self::SHELL_TOOLS, true)) {
+        if (!\is_array($data)) {
+            return null;
+        }
+        $tool = $data['tool_name'] ?? null;
+        if (\in_array($tool, self::READ_TOOLS, true)) {
+            return self::decideRead($data, $aiignoreGlobs);
+        }
+        if (!\in_array($tool, self::SHELL_TOOLS, true)) {
             return null;
         }
         $command = $data['tool_input']['command'] ?? null;
@@ -76,6 +94,41 @@ final class Guardrail
     }
 
     /**
+     * Applies the secret-file and `.aiignore` rules to a file-read tool's single path.
+     *
+     * Kiro sends an absolute path in `tool_input.path`. The secret-file list matches on any path tail, so it
+     * works on the absolute path as it does on a shell argument; the `.aiignore` globs are project-relative,
+     * so the path is first made relative to the payload's `cwd` before they are tried.
+     *
+     * @param array<string, mixed> $data          the decoded hook payload
+     * @param list<string>         $aiignoreGlobs paths from .aiignore that must never be read
+     *
+     * @return string|null the reason to block, or null to allow
+     */
+    private static function decideRead(array $data, array $aiignoreGlobs): ?string
+    {
+        $input = $data['tool_input'] ?? null;
+        $path = \is_array($input) ? ($input['path'] ?? null) : null;
+        if (!\is_string($path) || '' === $path) {
+            return null;
+        }
+
+        if (self::namesASecretFile($path)) {
+            return 'reading files that hold credentials or database dumps is not allowed';
+        }
+
+        $cwd = $data['cwd'] ?? null;
+        $relative = \is_string($cwd) && str_starts_with($path, rtrim($cwd, '/').'/')
+            ? substr($path, \strlen(rtrim($cwd, '/')) + 1)
+            : $path;
+        if (null !== $reason = self::matchesAiignore($relative, $aiignoreGlobs)) {
+            return $reason;
+        }
+
+        return null;
+    }
+
+    /**
      * Applies the file, network and push rules to one command segment.
      *
      * @param string       $segment       one command of the line, without its separators
@@ -97,13 +150,11 @@ final class Guardrail
 
         $secret = '(?:'.implode('|', self::SECRET_FILES).')';
         foreach ($args as $arg) {
-            if (preg_match('/(?:^|[\/=<>])'.$secret.'$/i', $arg)) {
+            if (self::namesASecretFile($arg)) {
                 return 'reading files that hold credentials or database dumps is not allowed';
             }
-            foreach ($aiignoreGlobs as $glob) {
-                if ('' !== $arg && (fnmatch($glob, $arg, \FNM_CASEFOLD) || fnmatch($glob, basename($arg), \FNM_CASEFOLD))) {
-                    return sprintf('%s is listed in .aiignore', $arg);
-                }
+            if (null !== $reason = self::matchesAiignore($arg, $aiignoreGlobs)) {
+                return $reason;
             }
         }
         if (\in_array($first, self::INTERPRETERS, true) && array_intersect($args, ['-c', '-r', '-e'])
@@ -132,6 +183,40 @@ final class Guardrail
                 if (preg_match('/^(?:[^:]+:)?(?:refs\/heads\/)?(main|master|develop|release\/\S+)$/', $arg)) {
                     return 'pushing to a protected branch needs a human';
                 }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Whether an argument or path names one of the credential or database-dump files.
+     *
+     * Matched on the tail of the string so an absolute path, a redirection target or a `cat .env` argument are
+     * all caught, and ignoring case as macOS file systems do. `.env.dist` and `.env.example` are templates and
+     * stay readable, as the SECRET_FILES patterns spell out.
+     *
+     * @param string $arg argument or path to inspect
+     */
+    private static function namesASecretFile(string $arg): bool
+    {
+        $secret = '(?:'.implode('|', self::SECRET_FILES).')';
+
+        return '' !== $arg && 1 === preg_match('/(?:^|[\/=<>])'.$secret.'$/i', $arg);
+    }
+
+    /**
+     * Whether a (project-relative) path is covered by an `.aiignore` glob.
+     *
+     * @param list<string> $aiignoreGlobs paths from .aiignore that must never be read
+     *
+     * @return string|null the reason to block, or null when no glob matches
+     */
+    private static function matchesAiignore(string $arg, array $aiignoreGlobs): ?string
+    {
+        foreach ($aiignoreGlobs as $glob) {
+            if ('' !== $arg && (fnmatch($glob, $arg, \FNM_CASEFOLD) || fnmatch($glob, basename($arg), \FNM_CASEFOLD))) {
+                return sprintf('%s is listed in .aiignore', $arg);
             }
         }
 
