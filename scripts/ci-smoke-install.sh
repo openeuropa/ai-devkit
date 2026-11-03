@@ -11,7 +11,9 @@ cd "$WORK" && git init -q . && git config user.email ci@example.org && git confi
 mkdir -p skills/drupal-gitlab
 printf -- '---\nname: drupal-gitlab\ndescription: PROJECT copy.\n---\n\n# project\n' > skills/drupal-gitlab/SKILL.md
 
-composer init -q --name smoke/consumer --stability stable --no-interaction
+# Supplying a requirement keeps Composer versions that serialize an empty
+# requirement list as [] from producing an invalid root composer.json.
+composer init -q --name smoke/consumer --stability stable --require php:^8.1 --no-interaction
 # Copy, not symlink: upstream's skill scanner skips symlinked directories (as a real install has none).
 composer config repositories.devkit "{\"type\": \"path\", \"url\": \"$DEVKIT\", \"options\": {\"symlink\": false}}"
 composer config allow-plugins.drupal/ai_best_practices true
