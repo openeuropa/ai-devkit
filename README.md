@@ -72,7 +72,7 @@ with `composer drupal-ai skills-list`.
 .kiro/steering/project-guardrails.md  created once, yours: this project's extra guardrails
 .kiro/steering/project-rtk.md         created once, yours: this project's commands, prefixed with rtk
 .kiro/oe-guardrail-patterns.txt       created once, yours: extra commands the guardrail blocks
-.aiignore                             created once, yours: files the guardrail never lets a command read
+.aiignore                             created once, yours: files the guardrail never lets a command or file-read tool read
 .kiro/hooks/             oe-guardrails.json, the PreToolUse guardrail
 .kiro/agents/            oe-reviewer.json + prompt, the read-only reviewer sub-agent
 .kiro/.gitignore         created once, yours afterwards
@@ -136,17 +136,35 @@ in steering files.
 | `AI_BEST_PRACTICES_SKIP_PACKAGE_SYNC=1` | environment | Skip upstream's skill sync and `AGENTS.md` update |
 | `AI_BEST_PRACTICES_SKIP_COMPOSER_MUTATION=1` | environment | Stop upstream adding the `drupal-ai` script to `composer.json` |
 | `.kiro/oe-guardrail-patterns.txt` | project | Extra PCRE patterns the guardrail blocks, one per line. Created once with commented examples |
-| `.aiignore` | project | Globs of files the guardrail never lets a shell command read. Created once with commented examples |
+| `.aiignore` | project | Globs of files the guardrail never lets a shell command or Kiro's file-read tools read. Created once with commented examples |
 
 ## Known limitations
 
 - **The guardrail is a tripwire, not a sandbox.** It blocks commands that
   name a credential file or an `.aiignore` path in any argument (whichever
-  program reads it), network recon tools, curl and wget to hosts outside the
-  allowlist, and pushes to protected branches. A path assembled at run time,
-  or another program that opens a connection, gets past it. Network egress
-  is enforced by the DevOps image's firewall, not by the hook. It checks
-  shell commands only, so Kiro's own file-read tool is not covered yet.
+  program reads it), Kiro's own `read_file` and `list_directory` tools when
+  they open such a path, network recon tools, curl and wget to hosts outside
+  the allowlist, and pushes to protected branches. A path assembled at run
+  time, or another program that opens a connection, gets past it. Network
+  egress is enforced by the DevOps image's firewall, not by the hook.
+- **Credential files in non-standard locations need an `.aiignore` entry.**
+  The guardrail recognises the conventional Drupal layout
+  (`sites/<dir>/settings*.php`, at any depth under `sites/`). If your project
+  keeps a settings or credential file somewhere else — for example a settings
+  file symlinked from another repository, or a path that does not sit under
+  `sites/` — add its glob to `.aiignore` so the guardrail blocks it too.
+- **Search results are not filtered.** The hook sees a search tool's
+  arguments, not its results, so `grep_search` and `file_search` can still
+  surface a line from a credential file. Closing that needs a project
+  `.kiroignore` (Kiro v3 applies it to reads and to search results); shipping
+  one is a new installed file and is tracked as a follow-up, pending a spec
+  change. Until then, keep credential files in `.aiignore` and do not widen a
+  search to pull in their contents.
+- **Standalone hooks need a trusted workspace.** Kiro CLI runs a repository's
+  `.kiro/hooks/` only in a workspace you have trusted. On a fresh clone,
+  confirm the trust prompt (or run `kiro-cli` once in the project root and
+  accept it) so the guardrail fires; an untrusted workspace skips the hook
+  without a message.
 - **The guardrail fails open.** Kiro blocks a command only when the hook
   exits with code 2. When `php` or `vendor/` is missing, or the guardrail
   crashes, Kiro runs the command without a message.
