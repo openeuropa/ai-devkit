@@ -147,6 +147,12 @@ in steering files.
   the allowlist, and pushes to protected branches. A path assembled at run
   time, or another program that opens a connection, gets past it. Network
   egress is enforced by the DevOps image's firewall, not by the hook.
+- **Credential files in non-standard locations need an `.aiignore` entry.**
+  The guardrail recognises the conventional Drupal layout
+  (`sites/<dir>/settings*.php`, at any depth under `sites/`). If your project
+  keeps a settings or credential file somewhere else — for example a settings
+  file symlinked from another repository, or a path that does not sit under
+  `sites/` — add its glob to `.aiignore` so the guardrail blocks it too.
 - **Search results are not filtered.** The hook sees a search tool's
   arguments, not its results, so `grep_search` and `file_search` can still
   surface a line from a credential file. Closing that needs a project

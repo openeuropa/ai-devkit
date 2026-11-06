@@ -115,6 +115,9 @@ final class GuardrailTest extends TestCase
         yield 'read_file .env' => [self::readPayload('read_file', '/project/.env')];
         yield 'read_file settings.php' => [self::readPayload('read_file', '/project/web/sites/default/settings.php')];
         yield 'read_file settings.local.php' => [self::readPayload('read_file', '/project/web/sites/default/settings.local.php')];
+        yield 'read_file settings.override.php' => [self::readPayload('read_file', '/project/web/sites/default/settings.override.php')];
+        yield 'read_file nested settings.php' => [self::readPayload('read_file', '/project/web/sites/default/local/settings.php')];
+        yield 'read_file nested settings.override.php' => [self::readPayload('read_file', '/project/web/sites/default/local/settings.override.php')];
         yield 'read_file runner.yml' => [self::readPayload('read_file', '/project/runner.yml')];
         yield 'read_file sql dump' => [self::readPayload('read_file', '/project/dbs/dump.sql')];
         yield 'read_file env local' => [self::readPayload('read_file', '/project/.env.local')];

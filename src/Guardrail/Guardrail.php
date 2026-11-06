@@ -39,7 +39,7 @@ final class Guardrail
      * reads it, so `tac .env` is blocked like `cat .env`. Matched ignoring case, as macOS file systems do.
      */
     private const SECRET_FILES = [
-        'sites\/[^\s\/]+\/settings[^\s\/]*\.php', // Drupal settings.php, settings.local.php: database credentials, hash salt.
+        'sites\/(?:[^\s\/]+\/)+settings[^\s\/]*\.php', // Drupal settings.php, settings.local.php, settings.override.php at any depth under sites/: database credentials, hash salt.
         'runner\.yml',                            // Toolkit's local settings; runner.yml.dist is the committed template.
         '\.env(?!\.(?:example|dist)\b)[^\s\/]*',  // .env, .env.local; .env.example and .env.dist are templates.
         'dbs(?:\/\S*)?',                          // Database dumps Toolkit downloads (the dbs/ dir and its contents).
