@@ -4,6 +4,11 @@
 set -euo pipefail
 DEVKIT="$(cd "$(dirname "$0")/.." && pwd)"
 WORK="$(mktemp -d)"
+# Report where the script died before cleaning up, so a CI failure shows the
+# failing line and exit code instead of an empty log. ERR fires on the actual
+# failing command (set -e); EXIT only removes the work dir.
+on_err() { echo "::error::smoke-install failed at line ${BASH_LINENO[0]} (exit $?)" >&2; }
+trap on_err ERR
 trap 'rm -rf "$WORK"' EXIT
 cd "$WORK" && git init -q . && git config user.email ci@example.org && git config user.name ci
 
@@ -38,7 +43,7 @@ echo '{"hook_event_name":"PreToolUse","tool_name":"execute_bash","tool_input":{"
 echo "--- a second install changes nothing"
 echo "/vendor/" > .gitignore
 git add -A && git commit -qm snapshot
-composer install --no-interaction >/dev/null 2>&1
+composer install --no-interaction
 if [ -n "$(git status --porcelain)" ]; then git status --porcelain; echo "second install was not idempotent"; exit 1; fi
 
 echo "smoke-install passed"

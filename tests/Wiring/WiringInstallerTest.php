@@ -102,6 +102,17 @@ final class WiringInstallerTest extends TestCase
         }
     }
 
+    public function testDoesNotInstallTheWikiSkeletonIntoTheProject(): void
+    {
+        $root = $this->tempRoot();
+        $installer = new WiringInstaller(PackageRoot::path());
+        $installer->install($root);
+        // The devkit must not force wiki pages into every project: the skeleton lives in the
+        // oe-project-wiki skill and is copied on request, not written by install().
+        self::assertFileDoesNotExist($root.'/docs/wiki/index.md');
+        self::assertDirectoryDoesNotExist($root.'/docs/wiki');
+    }
+
     public function testSteeringBudget(): void
     {
         self::assertLessThanOrEqual(WiringInstaller::STEERING_BUDGET, WiringInstaller::steeringLines(PackageRoot::path().'/steering'));
