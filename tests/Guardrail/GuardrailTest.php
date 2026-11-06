@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace OpenEuropa\AiDevkit\Tests\Guardrail;
 
 use OpenEuropa\AiDevkit\Guardrail\Guardrail;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class GuardrailTest extends TestCase
 {
-    /**
-     * @dataProvider blocked
-     */
+    #[DataProvider('blocked')]
     public function testBlocksRiskyCommands(string $command): void
     {
         self::assertNotNull(Guardrail::decide(self::payload($command)), $command);
@@ -57,9 +56,7 @@ final class GuardrailTest extends TestCase
         yield ['curl file:///etc/passwd'];
     }
 
-    /**
-     * @dataProvider allowed
-     */
+    #[DataProvider('allowed')]
     public function testAllowsNormalCommandsAndMalformedInput(string $stdin): void
     {
         self::assertNull(Guardrail::decide($stdin), $stdin);
@@ -104,9 +101,7 @@ final class GuardrailTest extends TestCase
         self::assertNotNull(Guardrail::decide(self::payload('tac SECRETS/A.TXT'), [], ['secrets/*.txt']));
     }
 
-    /**
-     * @dataProvider blockedReads
-     */
+    #[DataProvider('blockedReads')]
     public function testBlocksReadingSecretFilesWithKiroTools(string $payload): void
     {
         self::assertNotNull(Guardrail::decide($payload), $payload);
@@ -126,9 +121,7 @@ final class GuardrailTest extends TestCase
         yield 'list_directory dbs' => [self::readPayload('list_directory', '/project/dbs/dump.sql')];
     }
 
-    /**
-     * @dataProvider allowedReads
-     */
+    #[DataProvider('allowedReads')]
     public function testAllowsReadingNonSecretFilesWithKiroTools(string $payload): void
     {
         self::assertNull(Guardrail::decide($payload), $payload);
