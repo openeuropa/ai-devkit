@@ -17,10 +17,8 @@ page, its type, and what you will find.
 <!-- One folder per area (module, subsystem or feature). Replace this example
 with the project's real areas. Each line: path - (type) one-line summary. -->
 
-- example-area/adr-0001-example.md - (adr) example architectural decision;
-  replace with the area's first real decision.
-- example-area/example-feature-decision.md - (decision) example scoped
-  decision; replace or delete.
+- example-area/example-decision.md - (decision) example scoped
+  decision; replace with the area's first real decision.
 - example-area/example-convention.md - (convention) example; replace or
   delete.
 - example-area/example-pattern.md - (pattern) example reusable solution;
