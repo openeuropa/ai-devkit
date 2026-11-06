@@ -53,8 +53,12 @@ final class EvalSuiteYamlTest extends TestCase
         foreach ($rubrics['rubrics'] as $rubric) {
             self::assertNotEmpty($rubric['checks'] ?? [], "rubric {$rubric['id']} has checks");
             foreach ($rubric['checks'] as $check) {
-                self::assertContains($check['kind'], ['must_contain_any', 'must_not_contain'], "rubric {$rubric['id']} uses a known check kind");
-                self::assertNotEmpty($check['values'] ?? [], "rubric {$rubric['id']} check has values");
+                self::assertContains($check['kind'], ['must_contain_any', 'must_not_contain', 'php_lint', 'markdown_structure'], "rubric {$rubric['id']} uses a known check kind");
+                // Only the must_* kinds carry a values list; php_lint takes none
+                // and markdown_structure carries a rules dict instead.
+                if (\in_array($check['kind'], ['must_contain_any', 'must_not_contain'], true)) {
+                    self::assertNotEmpty($check['values'] ?? [], "rubric {$rubric['id']} check has values");
+                }
             }
         }
     }

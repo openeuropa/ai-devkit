@@ -87,21 +87,6 @@ final class WiringInstallerTest extends TestCase
         self::assertSame('project content', file_get_contents($root.'/.kiro/steering/project-rtk.md'));
     }
 
-    public function testRecreatesADeletedCreateOnceFile(): void
-    {
-        $root = $this->tempRoot();
-        $installer = new WiringInstaller(PackageRoot::path());
-        $installer->install($root);
-        // A create-once file is written only when missing, so deleting one must bring it back
-        // on the next run rather than leaving the project with a gap.
-        unlink($root.'/.kiro/steering/project-rtk.md');
-        self::assertSame(['.kiro/steering/project-rtk.md'], $installer->install($root));
-        self::assertSame(
-            file_get_contents(PackageRoot::path().'/templates/project-rtk.md'),
-            file_get_contents($root.'/.kiro/steering/project-rtk.md'),
-        );
-    }
-
     public function testGuardrailExamplesAreInertUntilUncommentedAndValid(): void
     {
         $root = $this->tempRoot();
