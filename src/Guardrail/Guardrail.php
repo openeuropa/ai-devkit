@@ -42,7 +42,7 @@ final class Guardrail
         'sites\/[^\s\/]+\/settings[^\s\/]*\.php', // Drupal settings.php, settings.local.php: database credentials, hash salt.
         'runner\.yml',                            // Toolkit's local settings; runner.yml.dist is the committed template.
         '\.env(?!\.(?:example|dist)\b)[^\s\/]*',  // .env, .env.local; .env.example and .env.dist are templates.
-        'dbs\/\S*',                               // Database dumps Toolkit downloads.
+        'dbs(?:\/\S*)?',                          // Database dumps Toolkit downloads (the dbs/ dir and its contents).
         '[^\s\/]+\.sql(?:\.gz)?',                 // Database dumps.
     ];
 

@@ -119,6 +119,8 @@ final class GuardrailTest extends TestCase
         yield 'read_file sql dump' => [self::readPayload('read_file', '/project/dbs/dump.sql')];
         yield 'read_file env local' => [self::readPayload('read_file', '/project/.env.local')];
         yield 'list_directory dbs' => [self::readPayload('list_directory', '/project/dbs/dump.sql')];
+        yield 'list_directory dbs dir' => [self::readPayload('list_directory', '/project/dbs')];
+        yield 'list_directory dbs dir trailing slash' => [self::readPayload('list_directory', '/project/dbs/')];
     }
 
     #[DataProvider('allowedReads')]
