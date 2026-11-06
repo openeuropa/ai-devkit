@@ -11,23 +11,23 @@ between agent sessions.
 
 The wiki groups pages by **area** (a module, subsystem or feature) under
 `docs/wiki/`, entered through `index.md`. Each page names its **type** in a
-`Type:` header: `adr` (numbered architectural decision), `decision` (lighter
-scoped decision), `convention` (where things live, how they are named),
-`pattern` (reusable solution) or `pitfall` (a trap to avoid). ADRs and
-decisions use the decision shape (Context / Decision / Consequences with a
-Status / Date / Type / Origin header); conventions, patterns and pitfalls use
-the reference shape. The starter skeleton (an `index.md` plus one example per
-type) ships with this skill under `references/`; copy from there when a
-project needs a wiki.
+`Type:` header: `decision` (a scoped architectural decision), `convention`
+(where things live, how they are named), `pattern` (reusable solution) or
+`pitfall` (a trap to avoid). Decisions use the decision shape (Context /
+Decision / Consequences with a Status / Date / Type / Origin header);
+conventions, patterns and pitfalls use the reference shape. Every page is
+named by slug, not numbered. The starter skeleton (an `index.md` plus one
+example per type) ships with this skill under `references/`; copy from there
+when a project needs a wiki.
 
-### ADR and decision status
+### Decision status
 
 The `Status:` header on a decision-shape page takes one of:
 
 - `accepted` — the default; a merged decision in effect. A new page starts
-  here, because the merge is the acceptance (see adr-0003).
-- `superseded by adr-NNNN-<slug>` — replaced by a specific later ADR. The file
-  stays; the status points to its successor.
+  here, because the merge is the acceptance (see status-vocabulary-decision).
+- `superseded by <area>/<slug>` — replaced by a specific later decision. The
+  file stays; the status points to its successor's slug path.
 - `deprecated` — no longer applies, with no replacement (nothing superseded
   it; the thing it decided about went away).
 

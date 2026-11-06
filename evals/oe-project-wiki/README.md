@@ -17,7 +17,7 @@ python3 vendor/drupal/ai_best_practices/evals/run-evals.py \
 
 Twelve checks (S01-S12): the skill file exists, its frontmatter follows the
 Agent Skills spec, the entry stays under 120 lines, and it names the wiki
-index, the five page types (`adr`, `decision`, `convention`, `pattern`,
+index, the four page types (`decision`, `convention`, `pattern`,
 `pitfall`), the by-area grouping, the `Origin:` provenance rule, the
 `references/` skeleton, and the "never write it unasked" rule.
 
@@ -45,6 +45,18 @@ the chosen CLI must be installed and authenticated. Three cases:
   wiki.
 
 These need a live model, so they are run on demand, not in CI.
+
+
+
+You can also use other providers like:
+
+```bash
+python3 vendor/drupal/ai_best_practices/evals/run-evals.py \
+  --behavioral --skill oe-project-wiki --provider codex --root . \
+  --model gpt-5.6-terra
+```
+
+
 
 ## Trace logging
 

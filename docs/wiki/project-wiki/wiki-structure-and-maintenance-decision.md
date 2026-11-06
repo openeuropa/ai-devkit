@@ -2,14 +2,15 @@
 
 - Status: accepted
 - Date: 2026-10-21
-- Type: adr
+- Type: decision
 - Origin: OEL-5055
 
 ## Context
 
-adr-0001 placed the knowledge base in-repo under `docs/wiki/`. This decision
-covers the three remaining "how it works" questions: the canonical page
-structure, the maintenance rule, and the issue-tracker linkage policy.
+wiki-hosting-location-decision placed the knowledge base in-repo under `docs/wiki/`.
+This decision covers the three remaining "how it works" questions: the
+canonical page structure, the maintenance rule, and the issue-tracker linkage
+policy.
 
 ## Decision
 
@@ -22,15 +23,14 @@ Each page names its type in a `Type:` header.
 docs/wiki/
   index.md            entry point; lists every page by area
   <area>/             one folder per module / subsystem / feature
-    adr-NNNN-<slug>.md   Type: adr        numbered architectural decision
-    <slug>.md            Type: decision   lighter scoped decision
-    <slug>.md            Type: convention directory / code convention (reference)
-    <slug>.md            Type: pattern    a pattern in the catalogue (reference)
-    <slug>.md            Type: pitfall    a trap to avoid (reference)
+    <topic>-decision.md    Type: decision   a scoped architectural decision
+    <topic>-convention.md  Type: convention directory / code convention (reference)
+    <topic>-pattern.md     Type: pattern    a pattern in the catalogue (reference)
+    <topic>-pitfall.md     Type: pitfall    a trap to avoid (reference)
 ```
 
-Five page types, declared in each page's `Type:` header, in two shapes:
-**decision** (`adr`, `decision`) and **reference** (`convention`, `pattern`,
+Four page types, declared in each page's `Type:` header, in two shapes:
+**decision** (`decision`) and **reference** (`convention`, `pattern`,
 `pitfall`). The decision shape is Context / Decision / Consequences with a
 Status / Date / Type / Origin header (optional "Options considered"); the
 reference shape is title, one-paragraph purpose, a "researched against" line
@@ -41,21 +41,18 @@ Grouping by area (not by type) matches how the agent searches: it opens the
 pages for the area it is about to touch. The type lives in the page header so a
 single area folder can hold every kind of page about that area.
 
-ADRs are numbered `adr-NNNN-<slug>.md`, never reused across the wiki; a
-reversed decision flips to "superseded by" and links to the replacement.
-Decisions, conventions, patterns and pitfalls are named by slug, not numbered.
-
-Grouping ADRs by area breaks with the conventional practice of keeping every
-ADR co-located in one directory (e.g. `docs/adr/`). Numbering stays
-globally sequential and unique, but the files now live across area folders, so
-there is no single ordered decision log, finding the next free number means
-scanning every area, and two concurrent PRs in different areas can claim the
-same number. Mitigation: `docs/wiki/index.md` lists every ADR in number order,
-so the index — not the directory layout — is the canonical decision log and the
-place to look up the next number; number collisions surface in review and are
-resolved by renumbering the later-merged ADR. If this friction proves real, a
-non-gaming nudge (an index-consistency reminder, not a CI gate) can be added
-later, consistent with the maintenance rule below.
+Every page is named by slug, not numbered, and the slug ends in its type:
+`<topic>-decision.md`, `<topic>-convention.md`, `<topic>-pattern.md`,
+`<topic>-pitfall.md`. The `<topic>` is a noun phrase naming what the page is
+about, not the action it takes (`page-type-taxonomy-decision`, not
+`drop-adr-page-type`), so the type is readable from the filename alone and
+matches the `Type:` header. There is no global decision log and
+no next-number lookup: a cross-area decision lives in an `architecture/` area,
+and a reversed decision flips its `Status:` to "superseded by" and points at
+the replacement's slug path. Dropping numbers removes the scattered-log
+problem (no single ordered sequence to maintain across area folders), the
+next-free-number scan, and the collisions two concurrent PRs would otherwise
+hit.
 
 `docs/wiki/index.md` is the single entry point: read it first, then only the
 pages it lists for the area being touched (progressive disclosure).
@@ -96,11 +93,10 @@ The project's issue tracker may be anything (GitHub issues, GitLab, Jira, ...).
 - Easier: a fixed taxonomy and two shapes keep projects consistent; the index
   gives the agent a cheap entry point; `Origin:` carries provenance with no
   extra mechanism; the reviewer already verifies correctness.
+- Easier: slug-named decisions drop the conventional co-located, numbered
+  decision log and with it the next-number lookup and concurrent-PR number
+  collisions; a cross-area decision goes in an `architecture/` area.
 - Harder: promotion is a judgement call; reviewers must honour the checklist;
   a lax review lets the wiki drift (accepted trade-off).
-- Harder: scattering ADRs by area gives up the conventional co-located
-  decision log; the ordered view and next-number lookup move to
-  `docs/wiki/index.md`, and concurrent-PR number collisions are resolved in
-  review by renumbering the later ADR (accepted trade-off).
 - Deferred: if drift proves real, a non-gaming automated nudge (a reminder
   comment, not a CI failure) can be added later.

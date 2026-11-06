@@ -9,9 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Soft completeness guard for this repo's own docs/wiki/: every page under an
- * area folder must be linked from index.md. adr-0002 rules out a hard CI gate
- * on the wiki; this only checks the index stays in step with its pages, which
- * is cheap and not gameable the way a "a file was touched" check would be.
+ * area folder must be linked from index.md. wiki-structure-and-maintenance
+ * rules out a hard CI gate on the wiki; this only checks the index stays in
+ * step with its pages, which is cheap and not gameable the way a "a file was
+ * touched" check would be.
  */
 final class WikiIndexTest extends TestCase
 {

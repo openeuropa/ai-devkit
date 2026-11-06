@@ -2,7 +2,7 @@
 
 - Status: accepted
 - Date: 2026-10-21
-- Type: adr
+- Type: decision
 - Origin: OEL-5055
 
 ## Context
@@ -46,6 +46,6 @@ dependency.
 - Easier: knowledge is versioned, reviewed and shipped with the code; agents
   have one canonical entry point.
 - Harder: the repo must carry and maintain the pages; an explicit maintenance
-  rule is needed to prevent drift (adr-0002).
+  rule is needed to prevent drift (see wiki-structure-and-maintenance-decision).
 - Deferred: kenkeep stays a referenced-but-undefined overlay until a separate
   ticket defines it.
