@@ -58,3 +58,26 @@ questions:
     - Explains the durability test
     - Keeps transient notes out of docs/wiki/
     - Ends with a verdict line stating the content is not wiki material
+- id: B04
+  input: 'During a ticket in an OpenEuropa repo you discovered a non-obvious
+    reason behind an architectural choice that would save the next person an
+    investigation. The ticket is JIRA-123. The repo has no docs/wiki/ and no
+    .ai/kenkeep/. What do you do at the end of the task? Output in Markdown,
+    and end with a line in exactly this form: "Action: <offered|wrote|none>",
+    where "offered" means you proposed setting up the wiki without creating
+    any file, "wrote" means you created files yourself, and "none" means you
+    did nothing.'
+  criteria: The agent recognises the project has not opted into a wiki, and
+    because the finding is durable it offers to set one up - copy the
+    references/ skeleton into docs/wiki/ and add the page - stating the finding
+    so the offer has a payoff, without creating any file unasked. It ends with
+    an action line stating the wiki setup was offered, not written.
+  bundle: oe_project_wiki
+  rubric_ref: rubric/oe_project_wiki_b04@1.0
+  metadata:
+    expectations:
+    - Recognises there is no wiki and does not treat its absence as an error
+    - Offers to scaffold docs/wiki/ from the skill's references/ skeleton
+    - States the durable finding so the offer has a payoff
+    - Does not create any file unasked
+    - Ends with an action line stating the setup was offered, not written

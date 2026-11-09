@@ -36,13 +36,19 @@ merge request, not by a header value that would go stale once merged.
 
 ## Before starting work
 
-1. Read `docs/wiki/index.md` if it exists. If it does not, say so once and
-   continue; do not create it unasked.
-2. Open the pages the index lists for the area you are about to touch
-   (module, subsystem, feature). Treat them as facts about this project;
-   when the code disagrees with a page, trust the code and note the drift.
-3. If `.ai/kenkeep/` exists, the project uses kenkeep: its root index is
-   the entry point instead, and notes are recalled through it.
+The wiki is opt-in: a project has one when `docs/wiki/index.md` exists. The
+devkit never creates it, and you do not create it unasked.
+
+1. If `.ai/kenkeep/` exists, the project uses kenkeep: its root index is the
+   entry point, and notes are recalled through it. Skip the rest of this
+   section.
+2. Otherwise, if `docs/wiki/index.md` exists, read it, then open the pages it
+   lists for the area you are about to touch (module, subsystem, feature).
+   Treat them as facts about this project; when the code disagrees with a
+   page, trust the code and note the drift.
+3. If neither exists, the project has not opted into a wiki. Say nothing about
+   it and proceed with the task; the offer to set one up comes at the end, and
+   only if the work produced something durable (see below).
 
 ## When you learn something durable
 
@@ -53,13 +59,19 @@ ticket status, anything the code states plainly.
 
 At the end of the task, propose the addition; never write it unasked:
 
-- Without kenkeep: propose a page or a section for `docs/wiki/`, under the
-  area folder it belongs to (module, subsystem or feature) and with a `Type:`
-  header, in the same shape as the existing pages (title, one-paragraph
-  purpose, a "researched against" line with date and versions, tables for
-  id/label mappings, links to code paths), plus the index line that points to
-  it. Put the ticket it came from on an `Origin:` line; it is provenance only,
-  so the page must still make sense without it.
+- No wiki yet (no `docs/wiki/index.md`, no kenkeep): the project has not opted
+  in. Offer to set one up — copy the starter skeleton from this skill's
+  `references/` (an `index.md` plus one example per type) into `docs/wiki/`,
+  then add the page for what you found. State the finding so the offer has a
+  payoff, and wait for a yes; do not create any file unasked. If there is
+  nothing durable to record, do not offer.
+- With a wiki, without kenkeep: propose a page or a section for `docs/wiki/`,
+  under the area folder it belongs to (module, subsystem or feature) and with
+  a `Type:` header, in the same shape as the existing pages (title,
+  one-paragraph purpose, a "researched against" line with date and versions,
+  tables for id/label mappings, links to code paths), plus the index line that
+  points to it. Put the ticket it came from on an `Origin:` line; it is
+  provenance only, so the page must still make sense without it.
 - With kenkeep: propose `/kk-add` with the fact in one or two sentences, or
   leave it for `/kk-curate` at session end.
 
