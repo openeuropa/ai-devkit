@@ -113,8 +113,8 @@ final class Guardrail
             return null;
         }
 
-        if (self::namesASecretFile($path)) {
-            return 'reading files that hold credentials or database dumps is not allowed';
+        if (null !== $reason = self::matchesSecretFile($path)) {
+            return $reason;
         }
 
         $cwd = $data['cwd'] ?? null;
@@ -150,16 +150,16 @@ final class Guardrail
 
         $secret = '(?:'.implode('|', self::SECRET_FILES).')';
         foreach ($args as $arg) {
-            if (self::namesASecretFile($arg)) {
-                return 'reading files that hold credentials or database dumps is not allowed';
+            if (null !== $reason = self::matchesSecretFile($arg)) {
+                return $reason;
             }
             if (null !== $reason = self::matchesAiignore($arg, $aiignoreGlobs)) {
                 return $reason;
             }
         }
         if (\in_array($first, self::INTERPRETERS, true) && array_intersect($args, ['-c', '-r', '-e'])
-            && preg_match('/(?:^|[\s\/=<>\'"(])'.$secret.'(?=$|[\s\'"\\\\)])/i', $segment)) {
-            return 'reading files that hold credentials or database dumps is not allowed';
+            && preg_match('/(?:^|[\s\/=<>\'"(])('.$secret.')(?=$|[\s\'"\\\\)])/i', $segment, $hit)) {
+            return self::secretReason($hit[1]);
         }
 
         if (\in_array($first, ['nc', 'ncat', 'netcat', 'dig', 'nslookup'], true)) {
@@ -194,15 +194,31 @@ final class Guardrail
      *
      * Matched on the tail of the string so an absolute path, a redirection target or a `cat .env` argument are
      * all caught, and ignoring case as macOS file systems do. `.env.dist` and `.env.example` are templates and
-     * stay readable, as the SECRET_FILES patterns spell out.
+     * stay readable, as the SECRET_FILES patterns spell out. On a match the reason names the offending file,
+     * as `matchesAiignore` does.
      *
      * @param string $arg argument or path to inspect
+     *
+     * @return string|null the reason to block, or null when no secret file is named
      */
-    private static function namesASecretFile(string $arg): bool
+    private static function matchesSecretFile(string $arg): ?string
     {
         $secret = '(?:'.implode('|', self::SECRET_FILES).')';
+        if ('' !== $arg && preg_match('/(?:^|[\/=<>])('.$secret.')$/i', $arg, $hit)) {
+            return self::secretReason($hit[1]);
+        }
 
-        return '' !== $arg && 1 === preg_match('/(?:^|[\/=<>])'.$secret.'$/i', $arg);
+        return null;
+    }
+
+    /**
+     * The block message for a named credential or database-dump file.
+     *
+     * @param string $file the matched file, as it appeared in the command or path
+     */
+    private static function secretReason(string $file): string
+    {
+        return sprintf('reading %s is not allowed: it holds credentials or database dumps', $file);
     }
 
     /**

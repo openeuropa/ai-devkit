@@ -92,6 +92,14 @@ final class GuardrailTest extends TestCase
         self::assertStringContainsString('/drush sql-dump/', (string) Guardrail::decide($stdin, ['/drush sql-dump/']));
     }
 
+    public function testSecretBlockMessageNamesTheFile(): void
+    {
+        // Shell argument, interpreter inline code and Kiro read tool each name the offending file.
+        self::assertStringContainsString('.env', (string) Guardrail::decide(self::payload('cat .env')));
+        self::assertStringContainsString('runner.yml', (string) Guardrail::decide(self::payload('perl -ne print runner.yml')));
+        self::assertStringContainsString('.env', (string) Guardrail::decide(self::readPayload('read_file', '/project/.env')));
+    }
+
     public function testAiignoreGlobsBlockReads(): void
     {
         self::assertNull(Guardrail::decide(self::payload('cat secrets/a.txt')));
