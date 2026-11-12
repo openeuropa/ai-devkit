@@ -35,7 +35,7 @@ no `dataset.yaml`, and it prints "No dataset.yaml found, skipping". Point it
 at this repo with `--root .`.
 
 Swap the provider with `--provider` (`claude`, `codex`, `gemini`, `mistral`);
-the chosen CLI must be installed and authenticated. Three cases:
+the chosen CLI must be installed and authenticated. Four cases:
 
 - B01 - wiki-first reading: read `docs/wiki/index.md` first, then only the
   pages relevant to the area being touched.
@@ -43,10 +43,10 @@ the chosen CLI must be installed and authenticated. Three cases:
   writing it unasked.
 - B03 - refuse to store transient notes (progress, ticket status) in the
   wiki.
+- B04 - in a project without a wiki, offer to set one up for a durable
+  finding, without creating any file unasked.
 
 These need a live model, so they are run on demand, not in CI.
-
-
 
 You can also use other providers like:
 
