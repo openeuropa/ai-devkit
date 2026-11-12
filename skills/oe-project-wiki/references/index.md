@@ -1,8 +1,8 @@
 # Project wiki
 
 <!-- Reference skeleton for the oe-project-wiki skill. This is the shape a
-project's docs/wiki/index.md should take; the agent copies from here when a
-project asks for a wiki, it is never installed automatically.
+project's docs/wiki/index.md should take. The agent uses it as a template
+when a project asks for a wiki. It is never installed automatically.
 Entry point for the project's durable knowledge. Read this first, then open
 only the pages listed for the area you are about to touch. Pages are grouped
 by area (a module, subsystem or feature); each page names its Type in its

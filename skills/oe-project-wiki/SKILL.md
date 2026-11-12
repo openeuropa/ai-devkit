@@ -16,20 +16,24 @@ The wiki groups pages by **area** (a module, subsystem or feature) under
 `pitfall` (a trap to avoid). Decisions use the decision shape (Context /
 Decision / Consequences with a Status / Date / Type / Origin header);
 conventions, patterns and pitfalls use the reference shape. Every page is
-named by slug, not numbered. The starter skeleton (an `index.md` plus one
-example per type) ships with this skill under `references/`; copy from there
-when a project needs a wiki.
+named by slug, not numbered. This skill's `references/` holds a template
+for `index.md` and one example page per type. Use them as templates, and do
+not copy the example pages into a project.
 
-### Decision status
+A rule the agent must follow on every task belongs in steering or
+`AGENTS.md`, not in the wiki. The wiki holds knowledge that is read when its
+area is touched.
+
+## Decision status
 
 The `Status:` header on a decision-shape page takes one of:
 
-- `accepted` — the default; a merged decision in effect. A new page starts
-  here, because the merge is the acceptance (see status-vocabulary-decision).
-- `superseded by <area>/<slug>` — replaced by a specific later decision. The
-  file stays; the status points to its successor's slug path.
-- `deprecated` — no longer applies, with no replacement (nothing superseded
-  it; the thing it decided about went away).
+- `accepted`: the default, a merged decision in effect. A new page starts
+  here, because the merge is the acceptance.
+- `superseded by <area>/<slug>`: replaced by a specific later decision. The
+  file stays, and the status points to its successor's slug path.
+- `deprecated`: no longer applies, with no replacement (nothing superseded
+  it, the thing it decided about went away).
 
 There is no `proposed` state: a decision under review is tracked by its open
 merge request, not by a header value that would go stale once merged.
@@ -44,8 +48,9 @@ devkit never creates it, and you do not create it unasked.
    section.
 2. Otherwise, if `docs/wiki/index.md` exists, read it, then open the pages it
    lists for the area you are about to touch (module, subsystem, feature).
-   Treat them as facts about this project; when the code disagrees with a
-   page, trust the code and note the drift.
+   Treat them as facts about this project. When the code disagrees with a
+   page, trust the code, and at the end of the task propose the fix to the
+   page in the same merge request.
 3. If neither exists, the project has not opted into a wiki. Say nothing about
    it and proceed with the task; the offer to set one up comes at the end, and
    only if the work produced something durable (see below).
@@ -60,11 +65,11 @@ ticket status, anything the code states plainly.
 At the end of the task, propose the addition; never write it unasked:
 
 - No wiki yet (no `docs/wiki/index.md`, no kenkeep): the project has not opted
-  in. Offer to set one up — copy the starter skeleton from this skill's
-  `references/` (an `index.md` plus one example per type) into `docs/wiki/`,
-  then add the page for what you found. State the finding so the offer has a
-  payoff, and wait for a yes; do not create any file unasked. If there is
-  nothing durable to record, do not offer.
+  in. Offer to set one up: `docs/wiki/index.md` and the page for what you
+  found, shaped like the templates in this skill's `references/`. Do not copy
+  the example pages. State the finding so the offer has a payoff, and wait
+  for a yes. Do not create any file unasked. If there is nothing durable to
+  record, do not offer.
 - With a wiki, without kenkeep: propose a page or a section for `docs/wiki/`,
   under the area folder it belongs to (module, subsystem or feature) and with
   a `Type:` header, in the same shape as the existing pages (title,

@@ -141,8 +141,8 @@ read before the source code. It is opt-in and off by default:
 - **The agent offers to set one up when it pays off.** If, during a ticket in a
   project with no wiki, the work turns up something durable (a non-obvious
   dependency, why a decision was taken, a trap worth recording), the agent
-  offers at the end to scaffold `docs/wiki/` from the skill's `references/`
-  skeleton and add that page. It never creates files unasked, and it does not
+  offers at the end to create `docs/wiki/index.md` and that page, using the
+  skill's `references/` as templates. It never creates files unasked, and it does not
   offer when nothing durable came up.
 - **The reviewer checks the wiki only when one exists.** `oe-reviewer` flags an
   architectural change that ships without its wiki update only in a project
