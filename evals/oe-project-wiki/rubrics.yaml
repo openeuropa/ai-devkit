@@ -1,0 +1,118 @@
+rubrics:
+- id: oe_project_wiki_b01
+  version: '1.0'
+  applicable_bundles:
+  - oe_project_wiki
+  checks:
+  - kind: must_contain_any
+    values:
+    - docs/wiki/index.md
+    - index.md
+  - kind: must_contain_any
+    values:
+    - trust the code
+    - trust code
+    - code disagrees
+    - code as authoritative
+    - code is authoritative
+    - code wins
+    - drift
+  # Progressive disclosure: the ticket is about search, so the Pages line
+  # must start with a search page and must not list a media or migration page.
+  # The comma forms catch another area later in the list without failing an
+  # answer that names a skipped page in its prose.
+  - kind: must_contain_any
+    values:
+    - 'Pages: search/'
+    - 'Pages: `search/'
+    - 'Pages: docs/wiki/search/'
+    - 'Pages: `docs/wiki/search/'
+  - kind: must_not_contain
+    values:
+    - 'Pages: media/'
+    - 'Pages: migration/'
+    - ', media/'
+    - ', migration/'
+    - ', `media/'
+    - ', `migration/'
+    - ', docs/wiki/media/'
+    - ', docs/wiki/migration/'
+  scoring:
+    combine: all_pass
+- id: oe_project_wiki_b02
+  version: '1.0'
+  applicable_bundles:
+  - oe_project_wiki
+  checks:
+  # The agent must emit the fixed verdict line, and it must say "proposed"
+  # (suggested, not written). Checking the token avoids scoring on free-text
+  # phrasing that a wrong answer can dodge or a right answer can trip.
+  - kind: must_contain_any
+    values:
+    - 'Action: proposed'
+  - kind: must_not_contain
+    values:
+    - 'Action: wrote'
+  # The proposed page is decision-shape, so its Status: header must use the
+  # skill's decision status list (accepted/superseded/deprecated). "proposed" was
+  # dropped as a status value, so a sample header using it is wrong.
+  - kind: must_not_contain
+    values:
+    - 'Status: proposed'
+  - kind: must_contain_any
+    values:
+    - Origin
+  # The page carries its type, and the proposal includes the index line. Plain
+  # "index" matched almost any answer.
+  - kind: must_contain_any
+    values:
+    - 'Type: decision'
+    - 'Type:** decision'
+    - 'Type: `decision`'
+  - kind: must_contain_any
+    values:
+    - index.md
+    - index line
+    - index entry
+  scoring:
+    combine: all_pass
+- id: oe_project_wiki_b03
+  version: '1.0'
+  applicable_bundles:
+  - oe_project_wiki
+  checks:
+  # Score on the fixed verdict token, not on free-text phrasing: a correct
+  # refusal must not fail for containing "...add it to the wiki", and a wrong
+  # answer must not pass for echoing "ticket status" from the prompt.
+  - kind: must_contain_any
+    values:
+    - 'Verdict: not wiki'
+  - kind: must_not_contain
+    values:
+    - 'Verdict: wiki'
+  scoring:
+    combine: all_pass
+- id: oe_project_wiki_b04
+  version: '1.0'
+  applicable_bundles:
+  - oe_project_wiki
+  checks:
+  # Score on the fixed verdict token. "offered" is the right answer: the agent
+  # proposed setting up the wiki without creating anything. "wrote" is the
+  # opt-in-breaking failure (it created files unasked); "none" is the failure
+  # of ignoring a durable finding. Reject both so neither can pass.
+  - kind: must_contain_any
+    values:
+    - 'Action: offered'
+  - kind: must_not_contain
+    values:
+    - 'Action: wrote'
+  - kind: must_not_contain
+    values:
+    - 'Action: none'
+  # The question never mentions a wiki, so naming docs/wiki comes from the skill.
+  - kind: must_contain_any
+    values:
+    - docs/wiki
+  scoring:
+    combine: all_pass

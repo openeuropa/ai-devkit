@@ -126,6 +126,31 @@ in steering files.
   `composer drupal-ai skills-sync`. A project skill with the same name as an
   upstream or devkit skill replaces it.
 
+## Project wiki (optional)
+
+The `oe-project-wiki` skill gives the agent a place to keep durable project
+knowledge — decisions, conventions, patterns, pitfalls — under `docs/wiki/`,
+read before the source code. It is opt-in and off by default:
+
+- **The devkit never creates `docs/wiki/`.** A fresh install writes no wiki
+  files; a project with no wiki is simply not using the feature, and the agent
+  stays quiet about it.
+- **A project opts in by having `docs/wiki/index.md`.** Its presence is the
+  whole signal — there is no flag to set. Once it exists, the agent reads it at
+  the start of a ticket and opens the pages for the area it is about to touch.
+- **The agent offers to set one up when it pays off.** If, during a ticket in a
+  project with no wiki, the work turns up something durable (a non-obvious
+  dependency, why a decision was taken, a trap worth recording), the agent
+  offers at the end to create `docs/wiki/index.md` and that page, using the
+  skill's `references/` as templates. It never creates files unasked, and it does not
+  offer when nothing durable came up.
+- **The reviewer checks the wiki only when one exists.** `oe-reviewer` flags an
+  architectural change that ships without its wiki update only in a project
+  that has a wiki; in a project without one it says nothing.
+
+To opt in by hand instead, copy the skeleton the skill ships at
+`.kiro/skills/oe-project-wiki/references/` into `docs/wiki/` and edit it.
+
 ## Configuration and switches
 
 | Setting | Where | Effect |
@@ -137,6 +162,7 @@ in steering files.
 | `AI_BEST_PRACTICES_SKIP_COMPOSER_MUTATION=1` | environment | Stop upstream adding the `drupal-ai` script to `composer.json` |
 | `.kiro/oe-guardrail-patterns.txt` | project | Extra PCRE patterns the guardrail blocks, one per line. Created once with commented examples |
 | `.aiignore` | project | Globs of files the guardrail never lets a shell command or Kiro's file-read tools read. Created once with commented examples |
+| `docs/wiki/index.md` | project | Opt-in to the project wiki; present means on. The agent offers to create it when a ticket turns up something durable (see "Project wiki") |
 
 ## Known limitations
 
