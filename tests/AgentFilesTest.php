@@ -24,14 +24,30 @@ final class AgentFilesTest extends TestCase
         self::assertFileExists(PackageRoot::path().'/agents/oe-reviewer.prompt.md');
     }
 
+    /** The reviewer may read the diff but not the credential files the guardrail protects. */
+    public function testReviewerDeniesReadingSecretFiles(): void
+    {
+        $agent = json_decode((string) file_get_contents(PackageRoot::path().'/agents/oe-reviewer.json'), true, 512, JSON_THROW_ON_ERROR);
+        $readDenies = array_filter($agent['permissions']['rules'], fn (array $r) => 'deny' === $r['effect'] && 'fs_read' === $r['capability']);
+        self::assertNotEmpty($readDenies, 'reviewer must deny reads of secret files');
+        $match = array_merge(...array_map(fn (array $r) => $r['match'], array_values($readDenies)));
+        foreach (['**/settings*.php', '**/.env', '**/.env.*', '**/dbs/**', '**/*.sql', '**/*.sql.gz', '**/runner.yml'] as $glob) {
+            self::assertContains($glob, $match, "reviewer must deny reading {$glob}");
+        }
+        // Templates stay readable.
+        $excludes = array_merge(...array_map(fn (array $r) => $r['exclude'] ?? [], array_values($readDenies)));
+        self::assertContains('**/*.dist', $excludes);
+    }
+
     /** Some Kiro builds read the matcher only as a regex against the tool ID, so test it that way. */
-    public function testGuardrailHookSelectsTheShellTool(): void
+    public function testGuardrailHookSelectsEveryCheckedTool(): void
     {
         $hook = json_decode((string) file_get_contents(PackageRoot::path().'/hooks/oe-guardrails.json'), true, 512, JSON_THROW_ON_ERROR)['hooks'][0];
         $composer = json_decode((string) file_get_contents(PackageRoot::path().'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
         self::assertSame('PreToolUse', $hook['trigger']);
         self::assertSame('vendor/bin/'.basename($composer['bin'][0]), $hook['action']['command']);
-        foreach (Guardrail::SHELL_TOOLS as $tool) {
+        $checked = array_merge(Guardrail::SHELL_TOOLS, Guardrail::READ_TOOLS);
+        foreach ($checked as $tool) {
             self::assertSame(1, preg_match('/'.str_replace('/', '\/', $hook['matcher']).'/', $tool), "matcher must select {$tool}");
         }
     }
