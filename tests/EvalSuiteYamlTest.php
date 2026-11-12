@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OpenEuropa\AiDevkit\Tests;
 
 use OpenEuropa\AiDevkit\PackageRoot;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
@@ -25,9 +26,7 @@ final class EvalSuiteYamlTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider suites
-     */
+    #[DataProvider('suites')]
     public function testDatasetAndRubricsParseAndLineUp(string $dir): void
     {
         try {
