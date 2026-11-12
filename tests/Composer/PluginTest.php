@@ -41,6 +41,7 @@ final class PluginTest extends TestCase
     public function testWiresAConsumerAndPointsUpstreamSkillSyncAtKiro(): void
     {
         $root = $this->tempRoot('vendor/drupal/ai_best_practices');
+        file_put_contents($root.'/composer.json', '{"name":"test/consumer","require":{}}');
         file_put_contents($root.'/vendor/drupal/ai_best_practices/ai_best_practices.yaml.dist', "skills:\n  output_directory: .agents/skills\n");
         $io = new BufferIO();
         (new Plugin())->wireProject($this->event($root, $io));
@@ -48,6 +49,9 @@ final class PluginTest extends TestCase
         self::assertFileExists($root.'/.kiro/hooks/oe-guardrails.json');
         self::assertSame("skills:\n  output_directory: .kiro/skills\n", file_get_contents($root.'/ai_best_practices.yaml'));
         self::assertStringContainsString('wrote .kiro/steering/oe-working-style.md', $io->getOutput());
+        $composerJson = json_decode((string) file_get_contents($root.'/composer.json'), false, 512, JSON_THROW_ON_ERROR);
+        self::assertInstanceOf(\stdClass::class, $composerJson->require);
+        self::assertObjectHasProperty('drupal-ai', $composerJson->scripts);
     }
 
     public function testWarnsWhenTheProjectSyncsSkillsElsewhere(): void
