@@ -180,7 +180,7 @@ final class Guardrail
         }
         if ('git' === $first && 'push' === ($args[0] ?? '')) {
             foreach (\array_slice($args, 1) as $arg) {
-                if (preg_match('/^(?:[^:]+:)?(?:refs\/heads\/)?(main|master|develop|release\/\S+)$/', $arg)) {
+                if (preg_match('/^(?:[^:]+:)?(?:refs\/heads\/)?(main|master|develop|release\/\S+|\d+\.x)$/', $arg)) {
                     return 'pushing to a protected branch needs a human';
                 }
             }

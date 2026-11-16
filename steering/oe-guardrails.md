@@ -22,6 +22,6 @@ Do not modify `.kiro/steering/`, `.kiro/hooks/`, `docker-compose.yml`,
 `.gitignore` or `.aiignore` without explicit confirmation from the user.
 
 Never push to a protected branch (`main`, `master`, `develop`, release
-branches). Push only to the branch the user named.
+branches, version branches such as `6.x`). Push only to the branch the user named.
 
 #[[file:.kiro/steering/project-guardrails.md]]
