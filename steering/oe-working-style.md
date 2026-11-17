@@ -20,5 +20,8 @@ Goal-driven: define the check before the change. "Add validation" means write
 the failing test, then make it pass. For multi-step work state a short plan
 with a verification step per item, then execute it.
 
-Before any commit or pull request, load the `oe-qa-gate` skill and run its
-checks in order. Before starting a ticket, load `oe-project-wiki`.
+Before any commit or pull request, run the project's checks and the tests for
+the code you changed, and fix what they report. Never bypass them. When the user
+asks for automated tests, or a change needs one, load `oe-automated-testing`
+before writing any test. Before starting a ticket, load
+`oe-project-wiki`.
