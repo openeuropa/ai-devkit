@@ -8,13 +8,15 @@
     "rules": [
       { "capability": "fs_write", "match": ["**"], "effect": "deny" },
       { "capability": "fs_read", "match": ["**/settings*.php", "**/runner.yml", "**/.env", "**/.env.*", "**/dbs/**", "**/*.sql", "**/*.sql.gz"], "exclude": ["**/*.dist", "**/.env.example", "**/default.settings.php", "**/example.settings*.php"], "effect": "deny" },
-      { "capability": "shell", "match": ["git diff *", "git log *", "git status*", "git show *", "vendor/bin/phpcs *", "vendor/bin/phpstan *", "rtk git diff *", "rtk git log *", "rtk vendor/bin/phpcs *", "rtk vendor/bin/phpstan *"], "effect": "allow" },
-      { "capability": "shell", "match": ["*"], "exclude": ["git diff *", "git log *", "git status*", "git show *", "vendor/bin/phpcs *", "vendor/bin/phpstan *", "rtk git diff *", "rtk git log *", "rtk vendor/bin/phpcs *", "rtk vendor/bin/phpstan *"], "effect": "deny" }
+      { "capability": "shell", "match": ["git diff *", "git log *", "git status*", "git show *", "vendor/bin/phpcs *", "vendor/bin/phpstan *", "git remote show origin", "git remote get-url origin", "gh repo view *", "gh pr view *", "gh pr diff *", "gh pr checks *", "gh run view *", "rtk git diff *", "rtk git log *", "rtk vendor/bin/phpcs *", "rtk vendor/bin/phpstan *", "rtk git remote show origin", "rtk git remote get-url origin", "rtk gh repo view *", "rtk gh pr view *", "rtk gh pr diff *", "rtk gh pr checks *", "rtk gh run view *"], "effect": "allow" },
+      { "capability": "shell", "match": ["*"], "exclude": ["git diff *", "git log *", "git status*", "git show *", "vendor/bin/phpcs *", "vendor/bin/phpstan *", "git remote show origin", "git remote get-url origin", "gh repo view *", "gh pr view *", "gh pr diff *", "gh pr checks *", "gh run view *", "rtk git diff *", "rtk git log *", "rtk vendor/bin/phpcs *", "rtk vendor/bin/phpstan *", "rtk git remote show origin", "rtk git remote get-url origin", "rtk gh repo view *", "rtk gh pr view *", "rtk gh pr diff *", "rtk gh pr checks *", "rtk gh run view *"], "effect": "deny" }
     ]
   },
   "resources": [
     "file://AGENTS.md",
     "skill://.kiro/skills/oe-automated-testing/SKILL.md",
+    "skill://.kiro/skills/oe-qa-gate/SKILL.md",
+    "skill://.kiro/skills/oe-pr-flow/SKILL.md",
     "skill://.kiro/skills/drupal-*/SKILL.md"
   ],
   "includeMcpJson": false,
