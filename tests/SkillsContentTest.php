@@ -22,4 +22,16 @@ final class SkillsContentTest extends TestCase
             self::assertFileExists(PackageRoot::path()."/evals/$name/README.md");
         }
     }
+
+    /** The working-style steering tells the agent to load oe-pr-flow, and steering stays within its line budget. */
+    public function testSteeringLoadsThePrFlowSkillWithinTheLineBudget(): void
+    {
+        $style = (string) file_get_contents(PackageRoot::path().'/steering/oe-working-style.md');
+        self::assertStringContainsString('`oe-pr-flow`', $style);
+        $lines = 0;
+        foreach (glob(PackageRoot::path().'/steering/*.md') ?: [] as $file) {
+            $lines += substr_count((string) file_get_contents($file), "\n");
+        }
+        self::assertLessThanOrEqual(200, $lines, 'steering stays within the 200-line budget');
+    }
 }
