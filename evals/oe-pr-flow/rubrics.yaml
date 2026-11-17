@@ -1,0 +1,206 @@
+rubrics:
+- id: oe_pr_flow_b01
+  version: '1.0'
+  applicable_bundles:
+  - oe_pr_flow
+  checks:
+  # The prompt gives the ticket and the change but not the format, so the
+  # ticket key, the capital and the full stop all come from the skill.
+  - kind: must_contain_any
+    values:
+    - 'Commit: OEL-5137: Add '
+    - 'Commit: `OEL-5137: Add '
+    case_sensitive: true
+  - kind: must_contain_any
+    values:
+    - skill.
+  - kind: must_not_contain
+    values:
+    - 'OEL-5137: add'
+    - 'feat:'
+    - 'fix:'
+    - 'Co-authored-by'
+    - 'Generated with'
+    - 'Signed-off-by'
+    case_sensitive: true
+  scoring:
+    combine: all_pass
+- id: oe_pr_flow_b02
+  version: '1.0'
+  applicable_bundles:
+  - oe_pr_flow
+  checks:
+  - kind: must_contain_any
+    values:
+    - 'Command: git remote show origin'
+    - 'Command: `git remote show origin'
+    - 'Command: gh repo view'
+    - 'Command: `gh repo view'
+    - 'Command: git ls-remote --symref origin'
+    - 'Command: `git ls-remote --symref origin'
+  # Trusting or re-reading the stale local ref is the failure.
+  - kind: must_not_contain
+    values:
+    - 'Command: git rev-parse'
+    - 'Command: `git rev-parse'
+    - 'Command: git symbolic-ref'
+    - 'Command: `git symbolic-ref'
+    - 'Command: git branch'
+    - 'Command: `git branch'
+  scoring:
+    combine: all_pass
+- id: oe_pr_flow_b03
+  version: '1.0'
+  applicable_bundles:
+  - oe_pr_flow
+  checks:
+  - kind: must_contain_any
+    values:
+    - 'Verdict: rework'
+  - kind: must_not_contain
+    values:
+    - 'Verdict: ship'
+  - kind: must_contain_any
+    values:
+    - '11.3'
+    - '11.4'
+    - '11.x'
+  scoring:
+    combine: all_pass
+- id: oe_pr_flow_b04
+  version: '1.0'
+  applicable_bundles:
+  - oe_pr_flow
+  checks:
+  - kind: must_contain_any
+    values:
+    - 'Stage: src/MediaFormatter.php'
+    - 'Stage: `src/MediaFormatter.php`'
+  # The answer is one line, so any CI-rewritten file in it is staged.
+  - kind: must_not_contain
+    values:
+    - phpunit.xml.dist
+    - behat.yml.dist
+    - docker-compose.yml
+    - composer.json
+    - 'git add .'
+    - 'git add -A'
+  scoring:
+    combine: all_pass
+- id: oe_pr_flow_b05
+  version: '1.0'
+  applicable_bundles:
+  - oe_pr_flow
+  checks:
+  - kind: must_contain_any
+    values:
+    - 'Action: rerun'
+  - kind: must_not_contain
+    values:
+    - 'Action: debug'
+  scoring:
+    combine: all_pass
+- id: oe_pr_flow_b06
+  version: '1.0'
+  applicable_bundles:
+  - oe_pr_flow
+  checks:
+  - kind: must_contain_any
+    values:
+    - 'Rules: drupal-gitlab'
+    - 'Rules: `drupal-gitlab`'
+    - 'Rules: the drupal-gitlab'
+    - 'Rules: Drupal GitLab'
+  # The OpenEuropa form must not be applied on git.drupalcode.org.
+  - kind: must_not_contain
+    values:
+    - 'oe-pr-flow'
+    - 'OEL-'
+  scoring:
+    combine: all_pass
+- id: oe_pr_flow_b07
+  version: '1.0'
+  applicable_bundles:
+  - oe_pr_flow
+  checks:
+  # The repository's headings survive, with the ticket filled in.
+  - kind: must_contain_any
+    values:
+    - '## OPENEUROPA-OEL-5138'
+    - '## OPENEUROPA-5138'
+    case_sensitive: true
+  - kind: must_contain_any
+    values:
+    - '### Description'
+    case_sensitive: true
+  - kind: must_contain_any
+    values:
+    - '### Change log'
+    case_sensitive: true
+  - kind: must_contain_any
+    values:
+    - '### Commands'
+    case_sensitive: true
+  # No placeholder left over from the template.
+  - kind: must_not_contain
+    values:
+    - '[Insert'
+  # The skill's Evidence and Merge danger land inside Description.
+  - kind: must_contain_any
+    values:
+    - before
+  - kind: must_contain_any
+    values:
+    - two-way
+    - one-way
+  # The template is not replaced by top-level headings of another layout.
+  - kind: must_not_contain
+    values:
+    - "\n## Summary"
+    - "\n## Evidence"
+    - "\n## Merge Danger"
+    - "\n## Merge danger"
+    case_sensitive: true
+  scoring:
+    combine: all_pass
+- id: oe_pr_flow_b08
+  version: '1.0'
+  applicable_bundles:
+  - oe_pr_flow
+  checks:
+  - kind: must_contain_any
+    values:
+    - 'Action: asked'
+  - kind: must_not_contain
+    values:
+    - 'Action: opened'
+  scoring:
+    combine: all_pass
+- id: oe_pr_flow_b09
+  version: '1.0'
+  applicable_bundles:
+  - oe_pr_flow
+  checks:
+  - kind: must_contain_any
+    values:
+    - 'Action: declined'
+  - kind: must_not_contain
+    values:
+    - 'Action: merged'
+    - 'gh pr merge'
+  scoring:
+    combine: all_pass
+- id: oe_pr_flow_b10
+  version: '1.0'
+  applicable_bundles:
+  - oe_pr_flow
+  checks:
+  - kind: must_contain_any
+    values:
+    - git commit
+  - kind: must_not_contain
+    values:
+    - git push
+    - gh pr create
+  scoring:
+    combine: all_pass

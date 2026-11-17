@@ -1,0 +1,27 @@
+{
+  "skill_file": "skills/oe-pr-flow/SKILL.md",
+  "assertions": [
+    {"id": "S01", "description": "Skill file exists", "check": "file_exists", "path": "skills/oe-pr-flow/SKILL.md"},
+    {"id": "S02", "description": "Frontmatter follows the Agent Skills spec", "check": "agent_skill_frontmatter"},
+    {"id": "S03", "description": "Entry point stays lean", "check": "max_lines", "limit": 250},
+    {"id": "S04", "description": "Reads the default branch from the remote", "check": "contains", "text": "git remote show origin"},
+    {"id": "S05", "description": "Offers the GitHub CLI route for the default branch", "check": "contains", "text": "gh repo view --json defaultBranchRef"},
+    {"id": "S06", "description": "Warns against the local origin/HEAD", "check": "contains", "text": "origin/HEAD"},
+    {"id": "S07", "description": "Teaches the commit line shape", "check": "contains", "text": "OEL-5137: Add the automated testing skill."},
+    {"id": "S08", "description": "Points to the commit-message rule instead of copying it", "check": "contains", "text": "base-conventions.yml"},
+    {"id": "S09", "description": "Points to the repository's PR template", "check": "contains", "text": ".github/pull_request_template.md"},
+    {"id": "S10", "description": "Requires Evidence in the description", "check": "contains", "text": "Evidence (required)"},
+    {"id": "S11", "description": "Requires Merge danger in the description", "check": "contains", "text": "Merge danger (required)"},
+    {"id": "S12", "description": "Describes Merge danger as a one-way or two-way door", "check": "contains", "text": "one-way or a two-way"},
+    {"id": "S13", "description": "Names the whole core matrix", "check": "contains", "text": "10.6, 11.3 and 11.4"},
+    {"id": "S14", "description": "Points to the CI workflow instead of copying it", "check": "contains", "text": "drupal-ci.yml"},
+    {"id": "S15", "description": "Lists the phpunit.xml.dist CI rewrite", "check": "contains", "text": "phpunit.xml.dist"},
+    {"id": "S16", "description": "Lists the behat.yml.dist CI rewrite", "check": "contains", "text": "behat.yml.dist"},
+    {"id": "S17", "description": "Lists the docker-compose.yml CI rewrite", "check": "contains", "text": "docker-compose.yml"},
+    {"id": "S18", "description": "Names the MySQL start-up race", "check": "contains", "text": "Connection refused"},
+    {"id": "S19", "description": "Names the batch group rule", "check": "contains", "text": "@group batchN"},
+    {"id": "S20", "description": "Defers git.drupalcode.org to drupal-gitlab", "check": "contains", "text": "`drupal-gitlab`"},
+    {"id": "S21", "description": "States the never-merge rule", "check": "contains", "text": "Never merge"},
+    {"id": "S22", "description": "Loads oe-qa-gate before a commit or request", "check": "contains", "text": "`oe-qa-gate`"}
+  ]
+}

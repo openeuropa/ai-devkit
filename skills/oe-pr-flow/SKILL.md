@@ -1,6 +1,6 @@
 ---
 name: oe-pr-flow
-description: Use before choosing a base branch, naming a branch, writing a commit message, opening a pull request or merge request, or reading a failed CI run in an OpenEuropa component (openeuropa/oe_*), on GitHub or GitLab. Teaches the base branch, branch name, commit line, request description, the every-supported-Drupal-version rule, which CI failures to rerun and which CI-made changes never get committed.
+description: Use before choosing a base branch, naming a branch, writing a commit message, opening a pull request, or reading a failed CI run in an OpenEuropa component (openeuropa/oe_*) on GitHub. Teaches the base branch, branch name, commit line, request description, the every-supported-Drupal-version rule, which CI failures to rerun and which CI-made changes never get committed. Defers to drupal-gitlab for git.drupalcode.org.
 ---
 
 # Pull request and CI flow
@@ -14,32 +14,29 @@ bug. This skill is the procedure. The facts that change (template, commit
 rule, CI matrix) live in the repository, so read them there and do not copy
 them from here.
 
-"Pull request" below also means a GitLab merge request.
+## Which rules apply
 
-## Host
+Work out the host from `git remote get-url origin`:
 
-Work out the host once, in this order, and use its CLI for everything:
+- `github.com/openeuropa/...`: this skill applies. Use `gh`.
+- `git.drupalcode.org`, or the work is a Drupal.org issue: load the
+  `drupal-gitlab` skill and follow it, including its commit format, issue
+  forks and merge requests. Its rules differ from the ones below (for
+  example Drupal commits take a type and issue number, and CI cannot be
+  rerun through the API). Do not apply this skill's commit line or CI
+  steps there.
+- Anything else, or no remote: ask one question and stop. Do not guess.
 
-1. `git remote get-url origin`: `github.com` is GitHub; a `gitlab` host or
-   `git.drupalcode.org` is GitLab.
-2. If that is unclear: `.github/` means GitHub; `.gitlab-ci.yml` or
-   `.gitlab/` means GitLab.
-3. Still unclear: ask one question and stop. Do not guess.
+OpenEuropa has no GitLab of its own, so there is no GitLab flow here.
 
-GitHub (`gh`) / GitLab (`glab`):
+Commands used below, all `gh`:
 
-- Default branch: `git remote show origin` on both.
-- Open the request: `gh pr create --base B --head H` /
-  `glab mr create -b B -s H`.
-- View, diff: `gh pr view`, `gh pr diff` / `glab mr view`, `glab mr diff`.
-- CI status: `gh pr checks` / `glab ci status`.
-- Failed job log: `gh run view RUN --log-failed` / `glab ci trace JOB`.
-- Rerun failures: `gh run rerun RUN --failed` / `glab ci retry JOB`.
-- Description template: `.github/pull_request_template.md` /
-  `.gitlab/merge_request_templates/`.
+- Default branch: `git remote show origin`, or `gh repo view`.
+- Open: `gh pr create --base B --head H`. View: `gh pr view`, `gh pr diff`.
+- CI: `gh pr checks`, `gh run view RUN --log-failed`,
+  `gh run rerun RUN --failed`.
+- Description template: `.github/pull_request_template.md`.
 
-On GitLab a rerun takes one job id, with no "failed jobs" flag: list the
-pipeline with `glab ci status` or `glab ci view`, then retry each failed job.
 Use the CLI, not `curl`. Run `--help` before using a flag you are unsure of.
 
 ## Base branch
@@ -49,7 +46,7 @@ per repository. Read the default from the remote:
 
 ```bash
 git remote show origin        # the "HEAD branch:" line
-gh repo view --json defaultBranchRef -q .defaultBranchRef.name   # GitHub
+gh repo view --json defaultBranchRef -q .defaultBranchRef.name
 ```
 
 Never take it from the local `origin/HEAD` or `git symbolic-ref
@@ -103,20 +100,23 @@ an empty heading. OpenEuropa's GitHub template has:
 - `### Commands`: the commands a reviewer runs to see the change. If there
   are none, say so.
 
-If the template is missing, use these sections. Do not paste the template
-from this skill into a repository that has its own.
+The repository's template is the structure of the description. Never
+replace it with another layout, and do not paste this skill's section names
+over it. If the repository has no template, use the four sections above.
 
-Inside Description, show the reviewer three things, short and in this order,
-unless the template already asks for them:
+Inside Description, show the reviewer the following, short:
 
-1. Summary: the smallest view that makes the point. Pseudocode for logic, a
-   call tree for flow, a file tree for a refactor, a diff for a small
-   change, Mermaid for interaction. A one-line fix needs no diagram.
-2. Evidence: before and after. The test that failed and now passes, or the
-   command output. A screenshot only for a visual change.
-3. Merge danger: whether the change is a one-way or a two-way door (can it
-   be rolled back), and its blast radius in a few words, for example "every
-   site using the theme".
+1. Evidence (required): before and after. The test that failed and now
+   passes, or the command output. A screenshot only for a visual change.
+2. Merge danger (required): whether the change is a one-way or a two-way
+   door (can it be rolled back), and its blast radius in a few words, for
+   example "every site using the theme". One or two lines.
+3. Summary (only when the change is not trivial): the smallest view that
+   makes the point. Pseudocode for logic, a call tree for flow, a file tree
+   for a refactor, a diff for a small change, Mermaid for interaction. A
+   one-line fix needs none.
+
+If the template already has a place for one of these, put it there.
 
 Use the domain words the repository already uses. Skip preambles.
 
@@ -127,9 +127,8 @@ Title: the ticket key and a short summary, as in the commit line.
 A change must work on the whole CI matrix, not only on the version in the
 local environment. Read the matrix from the component's
 `.github/workflows/ci.yml` and the workflow it calls
-(`openeuropa/github-ci`, `drupal-ci.yml`), or from `.gitlab-ci.yml`. At the
-time of writing the GitHub default is core 10.6, 11.3 and 11.4, but a
-component can override it.
+(`openeuropa/github-ci`, `drupal-ci.yml`). At the time of writing the
+default is core 10.6, 11.3 and 11.4, but a component can override it.
 
 - Never propose a fix that works on one version only: not a call that
   exists only in 11.x, not one that exists only in 10.6.
@@ -140,8 +139,8 @@ component can override it.
 
 ## Reading CI
 
-Start from the failing job: `gh pr checks` or `glab ci status`, then the
-failed log. Before changing code, tell a CI-only failure from a real one.
+Start from the failing job: `gh pr checks`, then the failed log. Before
+changing code, tell a CI-only failure from a real one.
 
 CI rewrites files in its own checkout so the matrix can run. These changes
 never belong in a commit:
