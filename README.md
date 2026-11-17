@@ -183,6 +183,36 @@ read before the source code. It is opt-in and off by default:
 To opt in by hand instead, copy the skeleton the skill ships at
 `.kiro/skills/oe-project-wiki/references/` into `docs/wiki/` and edit it.
 
+## Pull requests and CI
+
+The `oe-pr-flow` skill teaches the agent how OpenEuropa components on GitHub
+(`openeuropa/oe_*`) are branched, committed, opened as pull requests and
+checked in CI. The steering loads it before the agent picks a base branch,
+writes a commit message, opens a pull request or reads a failed CI run.
+
+- **It points to the repositories, it does not copy them.** The pull request
+  template, the commit-message rule (`git_commit_message` in
+  `openeuropa/code-review`) and the CI workflow (`openeuropa/github-ci`) stay
+  the source of truth, so the skill does not go stale when they change.
+- **Base branch** comes from the remote (`git remote show origin`), never
+  from the local `origin/HEAD`. **Branches** are named by the ticket key and
+  **commits** are one line, `TICKET-123: Capitalised summary.`, with no trailer.
+- **The description** fills the repository's template with no empty section
+  and shows Evidence (before and after) and Merge danger (one-way or two-way
+  door, blast radius), plus a Summary when the change is not trivial.
+- **A change must work on every core version in the CI matrix**, not one.
+- **CI-made changes are never committed** (`phpunit.xml.dist`,
+  `behat.yml.dist`, `docker-compose.yml`, the `drupal/core` constraints), a
+  database "Connection refused" in the 10.6 job is rerun, not debugged, and a
+  batched component needs `@group batchN` on new tests.
+- **The agent commits, pushes or opens a pull request only when asked, and
+  never merges.** The guardrail also blocks pushes to protected and version
+  branches.
+- **`git.drupalcode.org` is not covered.** For a Drupal.org issue or a
+  `git.drupalcode.org` remote the agent uses the upstream `drupal-gitlab`
+  skill, whose commit format and CI rules differ. OpenEuropa has no GitLab of
+  its own, so there is no GitLab flow here.
+
 ## Configuration and switches
 
 | Setting | Where | Effect |
@@ -202,8 +232,11 @@ To opt in by hand instead, copy the skeleton the skill ships at
   name a credential file or an `.aiignore` path in any argument (whichever
   program reads it), Kiro's own `read_file` and `list_directory` tools when
   they open such a path, network recon tools, curl and wget to hosts outside
-  the allowlist, and pushes to protected branches. A path assembled at run
-  time, or another program that opens a connection, gets past it. Network
+  the allowlist, and pushes to protected branches (`main`, `master`,
+  `develop`, `release/*` and version branches such as `6.x`) or without a
+  named remote and branch (a bare `git push`, `HEAD`, `--all`). A path
+  assembled at run time, or another program that opens a connection, gets
+  past it. Network
   egress is enforced by the DevOps image's firewall, not by the hook.
 - **Credential files in non-standard locations need an `.aiignore` entry.**
   The guardrail recognises the conventional Drupal layout

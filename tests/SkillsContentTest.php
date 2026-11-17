@@ -13,6 +13,7 @@ final class SkillsContentTest extends TestCase
     {
         $names = array_map(fn (string $f) => basename(\dirname($f)), glob(PackageRoot::path().'/skills/*/SKILL.md') ?: []);
         self::assertContains('oe-project-wiki', $names);
+        self::assertContains('oe-pr-flow', $names);
         foreach ($names as $name) {
             $md = (string) file_get_contents(PackageRoot::path()."/skills/$name/SKILL.md");
             self::assertMatchesRegularExpression('/^---\nname: '.preg_quote($name, '/').'\ndescription: .+\n---\n/s', $md, "$name frontmatter");
