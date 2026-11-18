@@ -114,7 +114,11 @@ in steering files.
   the steering files and the skill names automatically.
 - Run the reviewer with `kiro-cli chat --agent oe-reviewer` (or pick it with
   `/agent` in a session). It runs on `claude-opus-5`, reads, runs `git diff` / phpcs / phpstan, and
-  reports without editing. To review with another model, start it with
+  reports without editing. It never runs PHPUnit, and it cannot read
+  credential files (`settings*.php`, `runner.yml`, `.env*`, database dumps).
+  When the branch adds or changes tests, it reviews them against the
+  `oe-automated-testing` skill and flags only those tests, not existing ones.
+  To review with another model, start it with
   `kiro-cli chat --agent oe-reviewer --model <id>`; your own default model
   does not replace the pin. The default agent can also hand it a review ("have
   oe-reviewer check this"); the reviewer keeps its own permissions when it runs
@@ -123,6 +127,33 @@ in steering files.
 - Add project skills under `skills/<prefix>-<name>/SKILL.md` and run
   `composer drupal-ai skills-sync`. A project skill with the same name as an
   upstream or devkit skill replaces it.
+
+## Skills
+
+Besides the community skills synced from `drupal/ai_best_practices`, the
+devkit ships two OpenEuropa skills. The always-on working-style steering tells
+the agent when to load each one:
+
+| Skill | The agent loads it | What it does |
+|---|---|---|
+| `oe-project-wiki` | Before starting a ticket | Reads `docs/wiki/index.md` when the project has one; see "Project wiki" |
+| `oe-automated-testing` | When you ask for tests, or a change needs one | Builds on upstream's `drupal-automated-testing`; where they disagree, it wins |
+
+`oe-automated-testing` enforces the OpenEuropa test conventions:
+
+- Tests run in the project's Docker Compose stack, not DDEV.
+- On a site, the default test type is ExistingSite. Never write a new Behat
+  feature: update existing scenarios, and put new coverage in ExistingSite or
+  ExistingSiteJavascript tests.
+- No negative tests, unless the denial is itself the feature.
+- One test per behaviour, at one level.
+- External services are mocked through the existing mock modules.
+- In a project whose CI batches tests, every new test carries its
+  `@group batchN`.
+- A failing test is never made to pass by changing its assertion, skipping it
+  or excluding its group.
+
+The rules apply to new tests only; existing tests are not rewritten.
 
 ## Project wiki (optional)
 
@@ -145,6 +176,9 @@ read before the source code. It is opt-in and off by default:
 - **The reviewer checks the wiki only when one exists.** `oe-reviewer` flags an
   architectural change that ships without its wiki update only in a project
   that has a wiki; in a project without one it says nothing.
+
+- **A project that uses kenkeep** (`.ai/kenkeep/` exists) keeps its facts
+  there instead: the agent proposes a `/kk-add` note rather than a wiki page.
 
 To opt in by hand instead, copy the skeleton the skill ships at
 `.kiro/skills/oe-project-wiki/references/` into `docs/wiki/` and edit it.
@@ -203,6 +237,11 @@ To opt in by hand instead, copy the skeleton the skill ships at
   ```
 
   Installs from Packagist or a VCS repository are not affected.
+- **A project with an empty `require` can end up with an invalid
+  `composer.json`.** Upstream rewrites `composer.json` through PHP arrays, so
+  an empty `"require": {}` can come back as `"require": []`, which Composer
+  rejects on the next run. The devkit's smoke test avoids it by requiring a
+  package. If you hit it, change `[]` back to `{}`; the bug is upstream's.
 - **Default `bin-dir` assumed.** The guardrail hook runs
   `vendor/bin/oe-guardrail`. With a custom `bin-dir`, copy
   `.kiro/hooks/oe-guardrails.json` to a project hook with the right path.
@@ -242,7 +281,8 @@ scripts/ci-smoke-install.sh # end-to-end install into a throwaway project; needs
 composer evals              # static evals for this repository's skills, with upstream's runner
 ```
 
-Behavioral evals run against Kiro CLI 2.31 or later, agent engine v3 (log in with
+Behavioral evals run against Kiro CLI 3.0 or later, whose default engine is v3
+(on a 2.x CLI, select v3 first, as in "Using it"; log in with
 `kiro-cli login` first). Each call runs with an empty `KIRO_HOME`, so your own
 `~/.kiro` steering and skills stay out of the results:
 
