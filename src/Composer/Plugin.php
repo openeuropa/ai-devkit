@@ -89,5 +89,13 @@ final class Plugin implements PluginInterface, EventSubscriberInterface
         foreach ((new WiringInstaller(PackageRoot::path()))->install($root) as $path) {
             $io->write('  wrote '.$path);
         }
+
+        try {
+            if (UpstreamScriptRegistration::ensure($root)) {
+                $io->write('  registered drupal-ai in composer.json');
+            }
+        } catch (\Exception $e) {
+            $io->writeError('<warning>  Could not register drupal-ai safely: '.$e->getMessage().'</warning>');
+        }
     }
 }

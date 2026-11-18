@@ -12,6 +12,7 @@
     },
     "require-dev": {
         "composer/composer": "^2.2",
+        "cweagans/composer-patches": "^2.0",
         "friendsofphp/php-cs-fixer": "^3.59",
         "phpstan/phpstan": "^2",
         "phpunit/phpunit": "^10.0",
@@ -38,11 +39,17 @@
         "phpstan": "phpstan analyse --no-progress"
     },
     "extra": {
-        "class": "OpenEuropa\\AiDevkit\\Composer\\Plugin"
+        "class": "OpenEuropa\\AiDevkit\\Composer\\Plugin",
+        "patches": {
+            "drupal/ai_best_practices": {
+                "Preserve JSON object types in composer.json (upstream MR !124)": "https://git.drupalcode.org/issue/ai_best_practices-3589015/-/commit/086009d5f38e579d0148846b8fbd5780d54093a1.diff"
+            }
+        }
     },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
+            "cweagans/composer-patches": true,
             "drupal/ai_best_practices": false,
             "ronaldtebrake/agent-skills-validator": false
         }

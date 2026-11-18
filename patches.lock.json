@@ -1,0 +1,17 @@
+{
+    "_hash": "18fbd2c05ef5d5cb5f7eae712815ffdc985d0fee0936670173908a0137eeae72",
+    "patches": {
+        "drupal/ai_best_practices": [
+            {
+                "package": "drupal/ai_best_practices",
+                "description": "Preserve JSON object types in composer.json (upstream MR !124)",
+                "url": "https://git.drupalcode.org/issue/ai_best_practices-3589015/-/commit/086009d5f38e579d0148846b8fbd5780d54093a1.diff",
+                "sha256": "381a796d0777dec23ea0ece25819c75a9de8480d34bdef20792f82b7316b3cea",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ]
+    }
+}
