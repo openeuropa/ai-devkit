@@ -172,8 +172,7 @@ Reproduce a real failure locally on the failing version before editing code.
 
 Commit, push, open a pull request or comment only when the user asks, and
 only what they asked for: "commit" is not "push", and "push" is not "open a
-pull request". Never merge, approve or close one. Before a commit or a
-request, load `oe-qa-gate` and run its checks.
+pull request". Never merge, approve or close one.
 
 ## Reviewing a request
 

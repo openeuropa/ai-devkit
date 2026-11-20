@@ -22,6 +22,5 @@
     {"id": "S19", "description": "Names the batch group rule", "check": "contains", "text": "@group batchN"},
     {"id": "S20", "description": "Defers git.drupalcode.org to drupal-gitlab", "check": "contains", "text": "`drupal-gitlab`"},
     {"id": "S21", "description": "States the never-merge rule", "check": "contains", "text": "Never merge"},
-    {"id": "S22", "description": "Loads oe-qa-gate before a commit or request", "check": "contains", "text": "`oe-qa-gate`"}
   ]
 }
