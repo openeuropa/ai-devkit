@@ -30,6 +30,7 @@ echo "--- upstream skill sync targets .kiro/skills"
 grep -q 'output_directory: .kiro/skills' ai_best_practices.yaml
 test -f .kiro/skills/drupal-configuration/SKILL.md     # upstream skill
 test -f .kiro/skills/oe-project-wiki/SKILL.md          # devkit skill, discovered as a Composer package
+test -f .kiro/skills/oe-pr-flow/SKILL.md               # devkit skill, discovered as a Composer package
 grep -q 'PROJECT copy' .kiro/skills/drupal-gitlab/SKILL.md   # project skill wins
 test ! -d .agents/skills || [ -z "$(ls -A .agents/skills)" ]
 

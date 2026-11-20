@@ -25,3 +25,5 @@ the code you changed, and fix what they report. Never bypass them. When the user
 asks for automated tests, or a change needs one, load `oe-automated-testing`
 before writing any test. Before starting a ticket, load
 `oe-project-wiki`.
+Before choosing a base branch, writing a commit message, opening a pull request
+or reading a failed CI run, load `oe-pr-flow`.

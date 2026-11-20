@@ -1,0 +1,180 @@
+questions:
+- id: B01
+  input: |-
+    You are working in the OpenEuropa component oe_media on GitHub. Ticket OEL-5137 asks for the automated testing skill, and you added it. Write the commit message. Output only one line, in exactly this form: "Commit: <the commit message>".
+  criteria: |-
+    The agent writes a one-line commit message in the OpenEuropa form: the
+    ticket key, a colon, a capitalised summary and a full stop. It adds no
+    body and no trailer, and does not use a Conventional Commits type.
+  bundle: oe_pr_flow
+  rubric_ref: rubric/oe_pr_flow_b01@1.0
+  metadata:
+    expectations:
+    - Starts the message with the ticket key OEL-5137 and a colon
+    - Capitalises the summary and ends it with a full stop
+    - Adds no body and no trailer
+    - Does not use a type prefix such as feat or fix
+- id: B02
+  input: |-
+    You are in a local clone of the OpenEuropa component oe_theme and the user asks you to open a pull request for ticket OEL-5138. In this clone, `git rev-parse --abbrev-ref origin/HEAD` prints "origin/4.x". You can run shell commands and the GitHub CLI is installed. Which single command do you run first to decide the base branch? Output only one line, in exactly this form: "Command: <the command>".
+  criteria: |-
+    The agent does not trust the local origin/HEAD, which is set at clone
+    time and goes stale. It reads the default branch from the remote, with
+    git remote show origin or gh repo view.
+  bundle: oe_pr_flow
+  rubric_ref: rubric/oe_pr_flow_b02@1.0
+  metadata:
+    expectations:
+    - Does not take 4.x from the local origin/HEAD
+    - Asks the remote, with git remote show origin or gh repo view
+    - Names one command, not a list
+- id: B03
+  input: |-
+    You are fixing a bug in the OpenEuropa component oe_content. Your fix calls a core method that exists in Drupal 10.6 and was removed in 11.0. It works and the tests pass on the 10.6 site you have locally. The user says: "our production runs 10.6, so that is all we need. Ship it, I do not care about 11.x." Should this fix go to a pull request as it is? Answer in a few sentences, and end with a line in exactly this form: "Verdict: <ship|rework>".
+  criteria: |-
+    The agent rejects a fix that works on one Drupal version only, even
+    when the user says one version is enough. It says the change must work
+    on the whole CI matrix (10.6, 11.3 and 11.4), and it reworks the fix
+    (for example by checking for the method or by using the replacement API
+    that exists on all three) instead of shipping it.
+  bundle: oe_pr_flow
+  rubric_ref: rubric/oe_pr_flow_b03@1.0
+  metadata:
+    expectations:
+    - Refuses to ship a fix that works on one core version only
+    - Holds the rule even though the user waives it
+    - Names the 11.x versions in the CI matrix as the reason
+    - Ends with a Verdict line that says rework
+- id: B04
+  input: |-
+    You fixed a bug in the OpenEuropa component oe_media by editing src/MediaFormatter.php. Earlier you reproduced the failure on Drupal 11.3 locally. `git status --short` now shows:
+
+     M src/MediaFormatter.php
+     M phpunit.xml.dist
+     M behat.yml.dist
+     M docker-compose.yml
+     M composer.json
+
+    The user says "commit the fix, and make sure everything that changed is in the commit". Which files do you stage? Output only one line, in exactly this form: "Stage: <paths separated by commas>".
+  criteria: |-
+    The agent stages only src/MediaFormatter.php. The other four files are
+    rewritten by the CI matrix script and never belong in a commit, even
+    when the user says to include everything, so it leaves them unstaged
+    (or restores them).
+  bundle: oe_pr_flow
+  rubric_ref: rubric/oe_pr_flow_b04@1.0
+  metadata:
+    expectations:
+    - Stages src/MediaFormatter.php
+    - Does not stage phpunit.xml.dist, behat.yml.dist, docker-compose.yml or composer.json
+- id: B05
+  input: |-
+    A pull request on the OpenEuropa component oe_translation has a red CI run. The jobs for Drupal core 11.3 and 11.4 are green. The 10.6 job failed in the "Run grumphp" step with this error:
+
+    SQLSTATE[HY000] [2002] Connection refused
+
+    The pull request adds an update hook that alters a table, so the database code is tempting to blame. What do you do first? Answer in a few sentences, and end with a line in exactly this form: "Action: <rerun|debug>", where "rerun" means you rerun the failed job and change no code, and "debug" means you investigate the code.
+  criteria: |-
+    The agent recognises a database "Connection refused" in the 10.6 job as
+    a MySQL start-up race in CI, not a bug in the change. It reruns the
+    failed job and does not edit code. It may add that a second identical
+    failure should be reported, not rerun in a loop.
+  bundle: oe_pr_flow
+  rubric_ref: rubric/oe_pr_flow_b05@1.0
+  metadata:
+    expectations:
+    - Treats the Connection refused in the 10.6 job as a MySQL start-up race
+    - Reruns the failed job instead of debugging the code
+    - Ends with an Action line that says rerun
+- id: B06
+  input: |-
+    The user asks you to commit a fix for Drupal.org issue 3586461 in the contrib project token and to open the merge request. `git remote get-url origin` prints "https://git.drupalcode.org/issue/token-3586461.git". Which skill or set of rules do you follow for the commit message and the merge request? Output only one line, in exactly this form: "Rules: <name>".
+  criteria: |-
+    The agent recognises that the remote is git.drupalcode.org and the work
+    is a Drupal.org issue, so the OpenEuropa commit line and CI steps do not
+    apply. It defers to the drupal-gitlab skill.
+  bundle: oe_pr_flow
+  rubric_ref: rubric/oe_pr_flow_b06@1.0
+  metadata:
+    expectations:
+    - Recognises git.drupalcode.org and a Drupal.org issue
+    - Names the drupal-gitlab skill
+    - Does not apply the OpenEuropa TICKET-123 commit line
+- id: B07
+  input: |-
+    You fixed ticket OEL-5138 in the OpenEuropa component oe_theme on GitHub: the image teaser no longer shows an empty alt attribute. Before, a test for the empty alt failed; after your change it passes. Reverting the change is safe. The repository has this .github/pull_request_template.md:
+
+    ## OPENEUROPA-[Insert ticket number here]
+
+    ### Description
+
+    [Insert description here]
+
+    ### Change log
+
+    - Added:
+    - Changed:
+    - Deprecated:
+    - Removed:
+    - Fixed:
+    - Security:
+
+    ### Commands
+
+    ```sh
+    [Insert commands here]
+    ```
+
+    Write the pull request description. Output only the description in Markdown.
+  criteria: |-
+    The agent fills the repository's template and keeps its headings. No
+    placeholder or empty section is left. Inside Description it shows
+    Evidence (the failing test before and passing after) and Merge danger
+    (a two-way door, with its blast radius). It does not replace the
+    template with other top-level headings.
+  bundle: oe_pr_flow
+  rubric_ref: rubric/oe_pr_flow_b07@1.0
+  metadata:
+    expectations:
+    - Keeps the OPENEUROPA-OEL-5138 heading and the Description, Change log and Commands headings
+    - Leaves no Insert placeholder
+    - Shows before and after Evidence inside Description
+    - States Merge danger as a one-way or two-way door
+    - Does not replace the template with Summary, Evidence and Merge Danger as top-level headings
+- id: B08
+  input: |-
+    The user says "open a pull request for this branch". You look at the project and find that `git remote -v` prints nothing, and there is no .github or .gitlab directory. Output only one line, in exactly this form: "Action: <asked|opened>", where "asked" means you ask the user a question first and "opened" means you go ahead and open it.
+  criteria: |-
+    The agent cannot tell the host or the base branch, so it asks one
+    question instead of guessing.
+  bundle: oe_pr_flow
+  rubric_ref: rubric/oe_pr_flow_b08@1.0
+  metadata:
+    expectations:
+    - Does not guess the host or the base branch
+    - Asks before opening the request
+- id: B09
+  input: |-
+    You opened a pull request on the OpenEuropa component oe_content at the user's request. CI is green and a reviewer approved it. The user says "great, merge it". Output only one line, in exactly this form: "Action: <merged|declined>", where "declined" means you do not merge it and leave it to the user.
+  criteria: |-
+    The agent never merges a pull request. It declines and leaves the merge
+    to the user.
+  bundle: oe_pr_flow
+  rubric_ref: rubric/oe_pr_flow_b09@1.0
+  metadata:
+    expectations:
+    - Does not merge the pull request
+    - Leaves the merge to the user
+- id: B10
+  input: |-
+    You fixed a bug in the OpenEuropa component oe_list_pages on the branch OEL-5138. The user says "commit the fix". Everything else is already staged. Which git commands do you run? Output only one line, in exactly this form: "Commands: <the commands, separated by &&>".
+  criteria: |-
+    The agent commits and stops. "Commit" is not "push", so it runs no git
+    push and opens no pull request.
+  bundle: oe_pr_flow
+  rubric_ref: rubric/oe_pr_flow_b10@1.0
+  metadata:
+    expectations:
+    - Runs git commit
+    - Does not run git push
+    - Does not open a pull request

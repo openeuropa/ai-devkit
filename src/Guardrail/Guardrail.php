@@ -179,8 +179,17 @@ final class Guardrail
             }
         }
         if ('git' === $first && 'push' === ($args[0] ?? '')) {
-            foreach (\array_slice($args, 1) as $arg) {
-                if (preg_match('/^(?:[^:]+:)?(?:refs\/heads\/)?(main|master|develop|release\/\S+)$/', $arg)) {
+            // Options (--force, -u, --all, ...) are not targets. What is left must be the remote and at least one
+            // refspec, so a bare `git push`, `git push origin` or `--all` (which resolve the branch implicitly)
+            // are refused, as is a refspec of `HEAD`, which names the current branch only indirectly.
+            $positional = array_values(array_filter(\array_slice($args, 1), fn (string $a) => !str_starts_with($a, '-')));
+            $refspecs = \array_slice($positional, 1);
+            if ([] === $refspecs || array_intersect($refspecs, ['HEAD', '@'])) {
+                return 'git push must name the remote and the branch (not HEAD): the target must be explicit';
+            }
+            foreach ($positional as $arg) {
+                // `+src:dst` (force) and `:dst` (delete) are refspec forms; the destination is what matters.
+                if (preg_match('/^\+?(?:[^:]*:)?(?:refs\/heads\/)?(main|master|develop|release\/\S+|\d+\.x)$/', $arg)) {
                     return 'pushing to a protected branch needs a human';
                 }
             }

@@ -19,6 +19,8 @@ final class AgentFilesTest extends TestCase
         // Review always runs on Opus.
         self::assertSame('claude-opus-5', $agent['model']);
         self::assertContains('skill://.kiro/skills/oe-automated-testing/SKILL.md', $agent['resources']);
+        // A different model from the implementer's, so review does not share the author's blind spots.
+        self::assertContains('skill://.kiro/skills/oe-pr-flow/SKILL.md', $agent['resources']);
         $denies = array_filter($agent['permissions']['rules'], fn (array $r) => 'deny' === $r['effect'] && 'fs_write' === $r['capability']);
         self::assertNotEmpty($denies, 'reviewer must deny writes');
         self::assertFileExists(PackageRoot::path().'/agents/oe-reviewer.prompt.md');
@@ -90,6 +92,21 @@ final class AgentFilesTest extends TestCase
         self::assertCount(1, $catchAll, 'reviewer must deny any other shell command');
         foreach ($catchAll as $rule) {
             self::assertSame([], array_values(array_diff($allowed, $rule['exclude'] ?? [])), 'allowed commands must be excluded from the catch-all deny');
+        }
+    }
+
+    /** The reviewer may read a pull request and its CI, but never change one: no merge, create, comment or rerun. */
+    public function testReviewerShellAllowsReadingPullRequestsButNotChangingThem(): void
+    {
+        $agent = json_decode((string) file_get_contents(PackageRoot::path().'/agents/oe-reviewer.json'), true, 512, JSON_THROW_ON_ERROR);
+        $allow = array_values(array_filter($agent['permissions']['rules'], fn (array $r) => 'shell' === $r['capability'] && 'allow' === $r['effect']));
+        $allowed = $allow[0]['match'];
+        foreach (['gh pr view *', 'gh pr diff *', 'gh pr checks *', 'gh repo view *', 'gh run view *', 'git remote show origin'] as $command) {
+            self::assertContains($command, $allowed, "reviewer may run {$command}");
+            self::assertContains('rtk '.$command, $allowed, "reviewer may run rtk {$command}");
+        }
+        foreach ($allowed as $pattern) {
+            self::assertDoesNotMatchRegularExpression('/\b(?:merge|create|comment|review|close|rerun|edit|api)\b/', $pattern, "{$pattern} must be read-only");
         }
     }
 }
